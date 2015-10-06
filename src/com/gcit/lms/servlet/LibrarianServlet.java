@@ -68,7 +68,6 @@ public class LibrarianServlet extends HttpServlet {
 		out.println("</TR>");
 		
 		//table data
-		//int rowCount = 0;
 	    for (Branch branch : branches) {
 	    	out.println("<TR>");
 	    	out.println("<TD>"+branch.getBranchId()+"</TD>");
