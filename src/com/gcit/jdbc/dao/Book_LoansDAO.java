@@ -15,24 +15,30 @@ public class Book_LoansDAO extends BaseDAO {
 
 	
 	public void insert(BookLoans loan) throws SQLException {
-		save("insert into tbl_book_loans (bookId, branchId, cardNo, dateOut, dueDate, dateIn) values (?,?,?,?,?,?)",
-				new Object[] { loan.getBook().getBookId(), loan.getBranch().getBranchId(), 
-				loan.getBorrower().getCardNo(), loan.getDateOut(), loan.getDueDate(), 
-				loan.getDateIn() });
+		if (loan.getBorrower() != null && loan.getBranch() != null && loan.getBook() != null) {
+			save("insert into tbl_book_loans (bookId, branchId, cardNo, dateOut, dueDate, dateIn) values (?,?,?,?,?,?)",
+					new Object[] { loan.getBook().getBookId(), loan.getBranch().getBranchId(), 
+					loan.getBorrower().getCardNo(), loan.getDateOut(), loan.getDueDate(), 
+					loan.getDateIn() });
+		}
 	}
 	
 	public void update(BookLoans loan) throws SQLException {
-		save("update tbl_book_loans set bookId = ?, branchId = ?, cardNo = ?, dateOut = ?, dueDate = ?, dateIn = ?  "
-				+ "where bookId = ? and branchId = ? and cardNo = ?",
-				new Object[] { loan.getBook().getBookId(), loan.getBranch().getBranchId(), 
-						loan.getBorrower().getCardNo(), loan.getDateOut(), loan.getDueDate(), 
-						loan.getDateIn(), loan.getBook().getBookId(), loan.getBranch().getBranchId(),
-						loan.getBorrower().getCardNo()});
+		if (loan.getBorrower() != null && loan.getBranch() != null && loan.getBook() != null) {
+			save("update tbl_book_loans set bookId = ?, branchId = ?, cardNo = ?, dateOut = ?, dueDate = ?, dateIn = ?  "
+					+ "where bookId = ? and branchId = ? and cardNo = ?",
+					new Object[] { loan.getBook().getBookId(), loan.getBranch().getBranchId(), 
+							loan.getBorrower().getCardNo(), loan.getDateOut(), loan.getDueDate(), 
+							loan.getDateIn(), loan.getBook().getBookId(), loan.getBranch().getBranchId(),
+							loan.getBorrower().getCardNo()});
+		}
 	}
 
 	public void delete(BookLoans loan) throws SQLException {
-		save("delete from tbl_book_loans where bookId = ? and branchId = ? and cardNo = ?",
-				new Object[] { loan.getBook().getBookId(), loan.getBranch().getBranchId(), loan.getBorrower().getCardNo() });		
+		if (loan.getBorrower() != null && loan.getBranch() != null && loan.getBook() != null) {
+			save("delete from tbl_book_loans where bookId = ? and branchId = ? and cardNo = ?",
+					new Object[] { loan.getBook().getBookId(), loan.getBranch().getBranchId(), loan.getBorrower().getCardNo() });
+		}
 	}
 	
 	@SuppressWarnings("unchecked")

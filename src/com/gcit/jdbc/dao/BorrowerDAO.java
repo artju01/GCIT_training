@@ -23,9 +23,11 @@ public class BorrowerDAO extends BaseDAO {
 		save("delete from tbl_book_loans where cardNo = ?", 
 				new Object[] { borrow.getCardNo() });
 		for (BookLoans loan : borrow.getLoans()) {
-			save("insert into tbl_book_loans (bookId, branchId, cardNo, dteOut, dueDate, dateIn)", 
-					new Object[] { loan.getBook().getBookId(), loan.getBranch().getBranchId(), loan.getBorrower().getCardNo(),
-					loan.getDateOut(), loan.getDueDate(), loan.getDateIn()});
+			if (loan.getBorrower() != null && loan.getBook() != null && loan.getBranch() != null) {
+				save("insert into tbl_book_loans (bookId, branchId, cardNo, dteOut, dueDate, dateIn)", 
+						new Object[] { loan.getBook().getBookId(), loan.getBranch().getBranchId(), loan.getBorrower().getCardNo(),
+						loan.getDateOut(), loan.getDueDate(), loan.getDateIn()});	
+			}
 		}
 	}
 

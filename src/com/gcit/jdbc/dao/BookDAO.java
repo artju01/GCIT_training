@@ -15,30 +15,35 @@ import com.gcit.jdbc.entity.Publisher;
 public class BookDAO extends BaseDAO {
 
 	public void insert(Book book) throws SQLException {
-		int bookId = saveWithId(
-				"insert into tbl_book (title, pubId) values (?,?)",
-				new Object[] { book.getTitle(),
-						book.getPublisher().getPublisherId() });
-		for (Author auth : book.getAuthors()) {
-			save("insert into tbl_book_authors (bookId, authorId) values (?,?)",
-					new Object[] { bookId, auth.getAuthorId() });
-		}
+		if (book.getPublisher() != null) {
+			int bookId = saveWithId(
+					"insert into tbl_book (title, pubId) values (?,?)",
+					new Object[] { book.getTitle(),
+							book.getPublisher().getPublisherId() });
+			for (Author auth : book.getAuthors()) {
+				save("insert into tbl_book_authors (bookId, authorId) values (?,?)",
+						new Object[] { bookId, auth.getAuthorId() });
+			}
 
-		for (Genre genre : book.getGenres()) {
-			save("insert into tbl_book_genres (bookId, genreId) values (?,?)",
-					new Object[] { bookId, genre.getGenreId() });
+			for (Genre genre : book.getGenres()) {
+				save("insert into tbl_book_genres (bookId, genreId) values (?,?)",
+						new Object[] { bookId, genre.getGenreId() });
+			}
+			
+			for (BookCopies copy : book.getCopies()) {
+				if (copy.getBranch() != null) {
+					save ("insert into tbl_book_copies (bookId, branchId, noOfCopies)",
+							new Object[] {book.getBookId(), copy.getBranch().getBranchId(), copy.getNoOfCopies()});
+				}
+			}
 		}
-		
-		for (BookCopies copy : book.getCopies()) {
-			save ("insert into tbl_book_copies (bookId, branchId, noOfCopies)",
-					new Object[] {book.getBookId(), copy.getBranch().getBranchId(), copy.getNoOfCopies()});
-		}
-
 	}
 
 	public void update(Book book) throws SQLException {
-		save("update tbl_book  set title = ?, pubId = ? where bookId = ?",
-				new Object[] { book.getTitle(), book.getPublisher().getPublisherId(), book.getBookId() });
+		if (book.getPublisher() != null) {
+			save("update tbl_book  set title = ?, pubId = ? where bookId = ?",
+					new Object[] { book.getTitle(), book.getPublisher().getPublisherId(), book.getBookId() });
+		}
 		
 		save("delete from tbl_book_authors where bookId = ?",
 				new Object[] { book.getBookId() });
@@ -58,18 +63,22 @@ public class BookDAO extends BaseDAO {
 		save("delete from tbl_book_copies where bookId = ?",
 				new Object[] { book.getBookId() });
 		for (BookCopies copy : book.getCopies()) {
-			save("insert into tbl_book_copies (bookId, branchId) values (?,?)",
-					new Object[] { copy.getBook().getBookId(), copy.getBranch().getBranchId() });
+			if (copy.getBook() != null && copy.getBranch() != null) {
+				save("insert into tbl_book_copies (bookId, branchId) values (?,?)",
+						new Object[] { copy.getBook().getBookId(), copy.getBranch().getBranchId() });
+			}
 		}
 
 		save("delete from tbl_book_loans where bookId = ?",
 				new Object[] { book.getBookId() });
 		for (BookLoans loan : book.getLoans()) {
-			save("insert into tbl_book_loans (bookId, branchId, cardNo, dateOut, "
-					+ "dueDate, dateIn) values (?,?,?,?,?,?)",
-					new Object[] { loan.getBook().getBookId(), loan.getBranch().getBranchId(), 
-							loan.getBorrower().getCardNo(), loan.getDateOut(), loan.getDueDate(), 
-							loan.getDateIn() });
+			if (loan.getBranch() != null && loan.getBorrower() != null) {
+				save("insert into tbl_book_loans (bookId, branchId, cardNo, dateOut, "
+						+ "dueDate, dateIn) values (?,?,?,?,?,?)",
+						new Object[] { loan.getBook().getBookId(), loan.getBranch().getBranchId(), 
+								loan.getBorrower().getCardNo(), loan.getDateOut(), loan.getDueDate(), 
+								loan.getDateIn() });
+			}
 		}
 	}
 

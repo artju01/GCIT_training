@@ -5,7 +5,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.gcit.jdbc.entity.Author;
+
 import com.gcit.jdbc.entity.Book;
 import com.gcit.jdbc.entity.BookCopies;
 import com.gcit.jdbc.entity.Branch;
@@ -13,22 +13,28 @@ import com.gcit.jdbc.entity.Branch;
 
 
 public class Book_CopiesDAO extends BaseDAO{
-
-	//TODO  double check null on the object.get() , can do on here or on service
+	
 	public void insert(BookCopies copy) throws SQLException {
-		save("insert into tbl_book_copies (bookId, branchId, noOfCopies) values (?,?,?)",
-				new Object[] { copy.getBook().getBookId(), copy.getBranch().getBranchId(), copy.getNoOfCopies() });
+		if (copy.getBook() != null && copy.getBranch() != null) {
+			save("insert into tbl_book_copies (bookId, branchId, noOfCopies) values (?,?,?)",
+					new Object[] { copy.getBook().getBookId(), copy.getBranch().getBranchId(), copy.getNoOfCopies() });
+		}
 	}
 	
 	public void update(BookCopies copy) throws SQLException {
-		save("update tbl_book_copies set bookId = ?, branchId = ?, noOfCopies = ? where bookId = ? and branchId = ?",
-				new Object[] { copy.getBook().getBookId(), copy.getBranch().getBranchId(), copy.getNoOfCopies(),
-				copy.getBook().getBookId(), copy.getBranch().getBranchId()});
+		if (copy.getBook() != null && copy.getBranch() != null) {
+			save("update tbl_book_copies set bookId = ?, branchId = ?, noOfCopies = ? where bookId = ? and branchId = ?",
+					new Object[] { copy.getBook().getBookId(), copy.getBranch().getBranchId(), copy.getNoOfCopies(),
+					copy.getBook().getBookId(), copy.getBranch().getBranchId()});
+		}
 	}
 
 	public void delete(BookCopies copy) throws SQLException {
-		save("delete from tbl_book_copies where bookId = ? and branchId = ?",
-				new Object[] { copy.getBook().getBookId(), copy.getBranch().getBranchId() });		
+		if (copy.getBook() != null && copy.getBranch() != null) {
+			save("delete from tbl_book_copies where bookId = ? and branchId = ?",
+					new Object[] { copy.getBook().getBookId(), copy.getBranch().getBranchId() });
+		}
+		
 	}
 
 	@SuppressWarnings("unchecked")

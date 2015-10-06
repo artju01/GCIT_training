@@ -36,6 +36,10 @@ public class AdminServlet extends HttpServlet {
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		PrintWriter out = response.getWriter();
+		out.println("<html>");
+	    out.println("<head><title>All Branch</title></head>");
+	    out.println("<body>");
+	    out.println("<center><h1>All Branch sssss</h1>");
 	}
 
 	/**
