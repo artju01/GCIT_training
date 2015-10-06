@@ -29,11 +29,21 @@ public class LibrarianService {
 		bookCopiesDAO = new Book_CopiesDAO();
 	}
 	public void updateLibrary(Branch branch) throws SQLException {
-		branchDAO.update(branch);
+		try {
+			branchDAO.update(branch);
+		}
+		catch (SQLException e) {
+			System.out.println(e);
+		}
 	}
 	
-	public void updateBookCopies() {
-		
+	public void updateBookCopies(BookCopies copy) {
+		try {
+			bookCopiesDAO.insert(copy);
+		}
+		catch (SQLException e) {
+			System.out.println(e);
+		}
 	}
 	
 	public List<Branch> getAllBranch() throws SQLException {
@@ -174,7 +184,8 @@ public class LibrarianService {
 				copy.setBranch(branch);
 				copy.setNoOfCopies(numOfCopies);
 				
-				bookCopiesDAO.insert(copy);;
+				this.updateBookCopies(copy);
+				//bookCopiesDAO.insert(copy);;
 				break;
 			}
 		}

@@ -13,6 +13,12 @@ public abstract class BaseDAO {
 	protected abstract int convertResultCount(ResultSet rs) throws SQLException;
 	
 	protected Connection getConnection() throws SQLException {
+		try {
+			Class.forName("com.mysql.jdbc.Driver");
+		} catch (ClassNotFoundException e) {
+			e.printStackTrace();
+		}
+		
 		Connection conn = DriverManager.getConnection(
 				"jdbc:mysql://localhost:3306/library", 
 				"root", "");

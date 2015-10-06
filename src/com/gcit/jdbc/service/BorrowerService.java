@@ -71,18 +71,30 @@ public class BorrowerService {
 		
 		BookCopies copy = bookCopiesDAO.readOne(loan.getBook().getBookId(), loan.getBranch().getBranchId());
 		copy.setNoOfCopies(copy.getNoOfCopies()-1);
-		bookCopiesDAO.update(copy);
+		
+		try {
+			bookCopiesDAO.update(copy);
+		}
+		catch (SQLException e) {
+			System.out.println(e);
+		}
 		
 		//check if there is the same record on the db or not.  
 		//If yes, then update the data in DB
 		//If no,  insert a new record 
 		BookLoans loadData = bookLoansDAO.readOne(loan.getBook().getBookId(), loan.getBranch().getBranchId(), loan.getBorrower().getCardNo());
-		if (loadData != null) {
-			bookLoansDAO.update(loan);
+		try {
+			if (loadData != null) {
+				bookLoansDAO.update(loan);
+			}
+			else {
+				bookLoansDAO.insert(loan);
+			}
 		}
-		else {
-			bookLoansDAO.insert(loan);
+		catch (SQLException e) {
+			System.out.println(e);
 		}
+		
 	}
 	
 	public void returnBook(BookLoans loan) throws SQLException {
@@ -91,9 +103,14 @@ public class BorrowerService {
 		
 		BookCopies copy = bookCopiesDAO.readOne(loan.getBook().getBookId(), loan.getBranch().getBranchId());
 		copy.setNoOfCopies(copy.getNoOfCopies()+1);
-		
-		bookCopiesDAO.update(copy);
-		bookLoansDAO.update(loan);
+				
+		try {
+			bookCopiesDAO.update(copy);
+			bookLoansDAO.update(loan);
+		}
+		catch (SQLException e) {
+			System.out.println(e);
+		}
 	}
 		
 		/*
