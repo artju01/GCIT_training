@@ -41,6 +41,18 @@ public class AuthorDAO extends BaseDAO {
 			return null;
 		}
 	}
+	
+	@SuppressWarnings("unchecked")
+	public Author readOneByName(String name) throws SQLException {
+		List<Author> authors = (List<Author>) read(
+				"select * from tbl_author where authorName = ?",
+				new Object[] { name });
+		if (authors != null && authors.size() > 0) {
+			return authors.get(0);
+		} else {
+			return null;
+		}
+	}
 
 	@SuppressWarnings("unchecked")
 	public List<Author> readAll() throws SQLException {

@@ -160,6 +160,14 @@ public class AdministratorService {
 		}
 	}
 	
+	public void updateAuthorByName(String exName, String newName) throws SQLException {
+		Author author = authorDAO.readOneByName(exName);
+		if (author != null) {
+			author.setAuthorName(newName);
+			authorDAO.update(author);
+		}
+	}
+	
 	public void deleteAuthor(Author author) throws SQLException {
 		try {
 			authorDAO.delete(author);

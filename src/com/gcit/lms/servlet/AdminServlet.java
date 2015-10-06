@@ -23,12 +23,14 @@ import com.gcit.jdbc.service.AdministratorService;
 public class AdminServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        
+	private AdministratorService adminService;
     /**
      * @see HttpServlet#HttpServlet()
      */
     public AdminServlet() {
         super();
-        // TODO Auto-generated constructor stub
+        
+        adminService = new AdministratorService();
     }
 
 	/**
@@ -46,9 +48,19 @@ public class AdminServlet extends HttpServlet {
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		
+	
+		//Add author
 		if (request.getParameter("authorName") != null) {
 			addAuthor(request.getParameter("authorName"));	
 		}
+		
+		//Update author
+		if (request.getParameter("exAuthorName") != null && request.getParameter("newAuthorName") != null ) {
+			updateAuthor(request.getParameter("exAuthorName"), request.getParameter("newAuthorName"));
+		}
+		
+		
 		
 		//Add Publisher
 		if (request.getParameter("publisherName") != null) {
@@ -100,6 +112,14 @@ public class AdminServlet extends HttpServlet {
 		}
 	}
 	
+	public void updateAuthor(String exName, String newName) {
+		try {
+			adminService.updateAuthorByName(exName, newName);
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+	}
+	
 	public void addPublisher(Publisher pub) {
 		try {
 			new AdministratorService().addPublisher(pub);
@@ -118,7 +138,7 @@ public class AdminServlet extends HttpServlet {
 	
 	public void addBranch(Branch branch) {
 		try {
-			new AdministratorService().addBranch(branch);
+			adminService.addBranch(branch);
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}

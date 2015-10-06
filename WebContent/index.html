@@ -31,6 +31,15 @@
 				<input type="submit"/>
 			</form>
 		</div>
+		<h5>&emsp;&emsp;&emsp;&emsp;<a href="javascript:openMenu('updateAuthor');">Update Author</a></h5>
+		<div id="updateAuthor" style="display:none;">
+			<form action="adminServlet" method="post" name="updateAuthor">
+				<h4>Author</h4>
+				 Name: <input type="text" name="exAuthorName" />
+				 New Name: <input type="text" name="newAuthorName" />
+				<input type="submit"/>
+			</form>
+		</div>
 		<h5>&emsp;&emsp;&emsp;&emsp;<a href="listdAuthors.html">List Authors</a></h5>
 	</div>
 	<h4>&emsp;&emsp;<a href="javascript:openMenu('publisher');">Publisher</a></h4>
