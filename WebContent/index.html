@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>LMS</title>
+
+<script>
+	function openMenu(id) {
+		var elem = document.getElementById(id); 
+		if(elem.style.display=="block")
+			elem.style.display="none";
+		else
+			elem.style.display="block";
+	}
+</script>
+
+</head>
+<body>
+
+<h2>Welcome to LMS!</h2>
+
+<h4><a href="javascript:openMenu('admin');">Administrator</a></h4>
+<div id="admin" style="display:none;">
+	<h4>&emsp;&emsp;<a href="javascript:openMenu('author');">Author</a></h4>
+	<div id="author" style="display:none;">
+		<h5>&emsp;&emsp;&emsp;&emsp;<a href="javascript:openMenu('addAuthor');">Add Author</a></h5>
+		<div id="addAuthor" style="display:none;">
+			<form action="adminServlet" method="post">
+				<h4>Add Author</h4>
+				Author Name: <input type="text" name="authorName" />
+				<input type="submit"/>
+			</form>
+		</div>
+		
+		<h5>&emsp;&emsp;&emsp;&emsp;<a href="listdAuthors.html">List Authors</a></h5>
+	</div>
+</div>
+<h4><a href="librarian.html">Librarian</a></h4>
+<h4><a href="borrower.html">Borrower</a></h4>
+
+</body>
+</html>
