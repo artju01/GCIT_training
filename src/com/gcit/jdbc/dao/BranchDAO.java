@@ -79,14 +79,6 @@ public class BranchDAO extends  BaseDAO{
 		}
 		
 		return branches;
-	}
-
-	@Override
-	protected int convertResultCount(ResultSet rs) throws SQLException {
-		// TODO Auto-generated method stub
-		return 0;
-	}
-
-	
+	}	
 
 }

@@ -158,12 +158,4 @@ public class BookDAO extends BaseDAO {
 		return books;
 	}
 
-	@Override
-	protected int convertResultCount(ResultSet rs) throws SQLException {
-		if(rs.next()) {
-			return rs.getInt(1);
-		}
-		else 
-			return -1;
-	}
 }

@@ -10,7 +10,6 @@ import java.sql.Statement;
 public abstract class BaseDAO {
 
 	protected abstract Object convertResult(ResultSet rs) throws SQLException;
-	protected abstract int convertResultCount(ResultSet rs) throws SQLException;
 	
 	protected Connection getConnection() throws SQLException {
 		try {
@@ -37,13 +36,10 @@ public abstract class BaseDAO {
 		
 		ResultSet rs = stmt.getGeneratedKeys();
 		
-		return this.convertResultCount(rs);
-		
-		/*ResultSet rs = stmt.getGeneratedKeys();
 		if(rs.next())
-			return rs.getInt("bookId");
+			return rs.getInt(1);
 		else 
-			return -1;*/
+			return -1;
 	}
 
 	protected void save(String query, Object[] values) throws SQLException {

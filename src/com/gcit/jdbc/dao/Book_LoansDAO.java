@@ -100,10 +100,6 @@ public class Book_LoansDAO extends BaseDAO {
 		return bookLoans;
 	}
 
-	@Override
-	protected int convertResultCount(ResultSet rs) throws SQLException {
-		// TODO Auto-generated method stub
-		return 0;
-	}
+
 
 }

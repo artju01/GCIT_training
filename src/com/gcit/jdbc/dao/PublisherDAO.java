@@ -67,9 +67,4 @@ public class PublisherDAO extends BaseDAO {
 		return publishers;
 	}
 
-	@Override
-	protected int convertResultCount(ResultSet rs) throws SQLException {
-		// TODO Auto-generated method stub
-		return 0;
-	}
 }

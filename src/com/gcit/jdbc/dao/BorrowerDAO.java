@@ -79,10 +79,5 @@ public class BorrowerDAO extends BaseDAO {
 		return borrows;
 	}
 
-	@Override
-	protected int convertResultCount(ResultSet rs) throws SQLException {
-		// TODO Auto-generated method stub
-		return 0;
-	}
 
 }

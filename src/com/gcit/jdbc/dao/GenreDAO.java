@@ -66,11 +66,4 @@ public class GenreDAO extends BaseDAO{
 		return gens;
 	}
 
-	@Override
-	protected int convertResultCount(ResultSet rs) throws SQLException {
-		// TODO Auto-generated method stub
-		return 0;
-	}
-
-
 }
