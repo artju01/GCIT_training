@@ -140,6 +140,9 @@ public class AdministratorService {
 		}	
 	}
 	
+	public List<Author> getAllAuthors() throws SQLException {
+		return authorDAO.readAll();
+	}
 	
 	public void addAuthor(Author author) throws SQLException {
 		try {
@@ -204,6 +207,7 @@ public class AdministratorService {
 			System.out.println(e);
 		}
 	}
+	
 
 	public void addBranch(Branch branch) throws SQLException {
 		try {

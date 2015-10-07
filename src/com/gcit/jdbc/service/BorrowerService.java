@@ -67,7 +67,11 @@ public class BorrowerService {
 		Date currDate = new Date();
 		loan.setDateOut(currDate);
 		loan.setDateIn(null);
-		//TODO : need to add due date
+		
+		//7 days for due date
+		long theFuture = System.currentTimeMillis() + (86400 * 7 * 1000);
+		Date nextWeek = new Date(theFuture);
+		loan.setDueDate(nextWeek);
 		
 		BookCopies copy = bookCopiesDAO.readOne(loan.getBook().getBookId(), loan.getBranch().getBranchId());
 		copy.setNoOfCopies(copy.getNoOfCopies()-1);
