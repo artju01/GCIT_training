@@ -1,10 +1,6 @@
 package com.gcit.jdbc.service;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
 import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 
@@ -33,8 +29,7 @@ public class AdministratorService {
 	private BorrowerDAO borrowDAO;
 	private Book_CopiesDAO bookCopiesDAO;
 	private Book_LoansDAO bookLoansDAO;
-	
-	private BufferedReader in;
+
 	
 	public AdministratorService() {
 		bookDAO = new BookDAO();
@@ -45,8 +40,6 @@ public class AdministratorService {
 		borrowDAO = new BorrowerDAO();
 		bookCopiesDAO = new Book_CopiesDAO();
 		bookLoansDAO = new Book_LoansDAO();
-		
-		in = new BufferedReader(new InputStreamReader(System.in));
 	}
 	public List<Publisher> getAllPublisher() throws SQLException {
 		List<Publisher> pubs = pubDAO.readAll();
@@ -208,7 +201,10 @@ public class AdministratorService {
 		}
 	}
 	
-
+	public List<Branch> getAllBranches() throws SQLException {
+		return branchDAO.readAll();
+	}
+	
 	public void addBranch(Branch branch) throws SQLException {
 		try {
 			branchDAO.insert(branch);
@@ -234,6 +230,10 @@ public class AdministratorService {
 		catch (SQLException e) {
 			System.out.println(e);
 		}
+	}
+	
+	public List<Borrower> getAllBorrower() throws SQLException {
+		return borrowDAO.readAll();
 	}
 	
 	public void addBorrower(Borrower borrow) throws SQLException {
@@ -271,176 +271,5 @@ public class AdministratorService {
 			System.out.println(e);
 		}
 	}
-	
-	/*--------------------------------------
-	 *    Input  Command
-	 *///--------------------------------------
-	
-	public void commandInput () throws IOException, SQLException {
-		while(true) {
-			System.out.println("Please choose what to do");
-			System.out.println("1) Add/Update/Delete Book");
-			System.out.println("2) Add/Update/Delete Author");
-			System.out.println("3) Add/Update/Delete Library Branches");
-			System.out.println("4) Add/Update/Delete Borrower");
-			System.out.println("5) Over-ride due date for a Book Loan");
-			System.out.println("6) Exit");
-			
-			String keyboard = in.readLine();
-			int input = Integer.parseInt(keyboard);
-			
-			if (input == 1) {
-				bookCommandLine();
-			}
-			else if (input == 2) {
-				
-			}
-			else {
-				break;
-			}
-		}
-	}
-	
-	private void bookCommandLine() throws IOException, SQLException {
-		System.out.println("Add/Update/Delete Book");
-		System.out.println("1) Add");
-		System.out.println("2) Update");
-		System.out.println("3) Delete");
-		System.out.println("4) Previos menu");
-		
-		String keyboard = in.readLine();
-		int input = Integer.parseInt(keyboard);
-		
-		if (input == 1) {
-			String selectedBookName;
-			Publisher selectedPublisher = null;
-			List<Author> seletedAuthors = new ArrayList<Author>();
-			List<Genre> selectedGenre = new ArrayList<Genre>();
-			
-			System.out.println("Enter book name :");
-			keyboard = in.readLine();
-			selectedBookName = keyboard;
-			
-			//select publisher
-			int count = 1;
-			System.out.println("Select publisher :");
-			List<Publisher> pubs = this.getAllPublisher();
-			for (Publisher pub : pubs) {
-				System.out.println(count+") "+pub.getPublisherName());
-				count++;
-			}
-			keyboard = in.readLine();
-			input = Integer.parseInt(keyboard);
-			
-			if (input < count) {
-				selectedPublisher = pubs.get(input-1);
-			}
-			
-			//select authors
-			int authorCount = 0;
-			System.out.println("How many author? :");
-			keyboard = in.readLine();
-			authorCount = Integer.parseInt(keyboard);
-			count = 0;
-			
-			List<Author> auths = authorDAO.readAll();
-			
-			for (int i = 0; i< authorCount; i++) {
-				System.out.println("Please select "+(i+1)+ " author");
-				count = 0;
-				for (Author auth : auths) {
-					System.out.println(count+") "+auth.getAuthorName());
-					count++;
-				}
-				
-				keyboard = in.readLine();
-				input = Integer.parseInt(keyboard);
-				seletedAuthors.add(auths.get(input-1));
-			}
-			
-			//select genres
-			int genreCount = 0;
-			System.out.println("How many genre? :");
-			keyboard = in.readLine();
-			genreCount = Integer.parseInt(keyboard);
-			count = 0;
-			
-			List<Genre> gens = genreDAO.readAll();
-			
-			for (int i = 0; i< genreCount; i++) {
-				System.out.println("Please select "+(i+1)+ " genre");
-				count = 0;
-				for (Genre gen : gens) {
-					System.out.println(count+") "+gen.getGenreName());
-					count++;
-				}
-				
-				keyboard = in.readLine();
-				input = Integer.parseInt(keyboard);
-				selectedGenre.add(gens.get(input-1));
-			}
-			
-			//book copies
-			
-			Book bk = new Book();
-			bk.setTitle(selectedBookName);
-			bk.setAuthors(seletedAuthors);
-			bk.setGenres(selectedGenre);
-			bk.setPublisher(selectedPublisher);
-			
-			this.addBook(bk);
-			//bookDAO.insert(bk);
-			
-		}
-		else if (input == 2) {
-			//update
-			System.out.println("Select a book that you want to update.");
-			List<Book> books = this.getAllBooks();
-			int bookCount = 1;
-			for (Book book : books) {
-				System.out.println(bookCount+") "+book.getTitle());
-				bookCount++;
-			}
-			System.out.println(bookCount+") Cancel");
-			
-			keyboard = in.readLine();
-			input = Integer.parseInt(keyboard);
-			
-			if (input >= bookCount) {
-				return;
-			}
-			
-			Book updatedBook = books.get(input-1);
-			System.out.println("Enter a new title");
-			String newTitle = in.readLine();
-			updatedBook.setTitle(newTitle);
-			
-			this.updateBook(updatedBook);
-			//bookDAO.update(updatedBook);
-			
-		}
-		else if (input == 3) {
-			//delete
-			System.out.println("Select a book that you want to remove.");
-			List<Book> books = this.getAllBooks();
-			int bookCount = 1;
-			for (Book book : books) {
-				System.out.println(bookCount+") "+book.getTitle());
-				bookCount++;
-			}
-			System.out.println(bookCount+") Cancel");
-			
-			keyboard = in.readLine();
-			input = Integer.parseInt(keyboard);
-			
-			if (input >= bookCount) {
-				return;
-			}
-			Book deletedBook = books.get(input-1);
-			bookDAO.delete(deletedBook);
-		}
-		else {
-			return;
-		}
-	}
+
 }

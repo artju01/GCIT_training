@@ -33,6 +33,39 @@
 		
 		<h5>&emsp;&emsp;&emsp;&emsp;<a href="listAuthors.jsp">List Authors</a></h5>
 	</div>
+	
+	<h4>&emsp;&emsp;<a href="javascript:openMenu('branch');">Branch</a></h4>
+	<div id="branch" style="display:none;">
+		<h5>&emsp;&emsp;&emsp;&emsp;<a href="javascript:openMenu('addBranch');">Add Branch</a></h5>
+		<div id="addBranch" style="display:none;">
+			<form action="addBranch" method="post">
+				<h4>Add Branch</h4>
+				Branch Name: <input type="text" name="branchName" />
+				Branch Address: <input type="text" name="branchAddress" />
+				<input type="submit"/>
+			</form>
+		</div>
+		
+		<h5>&emsp;&emsp;&emsp;&emsp;<a href="listBranches.jsp">List Branches</a></h5>
+	</div>
+	
+	<h4>&emsp;&emsp;<a href="javascript:openMenu('borrower');">Borrower</a></h4>
+	<div id="borrower" style="display:none;">
+		<h5>&emsp;&emsp;&emsp;&emsp;<a href="javascript:openMenu('addBorrower');">Add Borrower</a></h5>
+		<div id="addBorrower" style="display:none;">
+			<form action="addBorrower" method="post">
+				<h4>Add Borrower</h4>
+				Borrower Name: <input type="text" name="borrowerName" />
+				Borrower Address: <input type="text" name="borrowerAddress" />
+				Borrower Phone: <input type="text" name="borrowerPhone" />
+				<input type="submit"/>
+			</form>
+		</div>
+		
+		<h5>&emsp;&emsp;&emsp;&emsp;<a href="listBorrowers.jsp">List Borrowers</a></h5>
+	</div>
+	
+	
 </div>
 <h4><a href="librarian.html">Librarian</a></h4>
 <h4><a href="borrower.html">Borrower</a></h4>

@@ -11,12 +11,17 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import com.gcit.jdbc.entity.Author;
+import com.gcit.jdbc.entity.Borrower;
+import com.gcit.jdbc.entity.Branch;
 import com.gcit.jdbc.service.AdministratorService;
 
 /**
  * Servlet implementation class AdminServlet
  */
-@WebServlet({"/addAuthor","/deleteAuthor","/editAuthor","/addBook"})
+@WebServlet({"/addAuthor","/deleteAuthor","/editAuthor",
+	"/addBorrower","/deleteBorrower","/editBorrower",
+	"/addBranch","/deleteBranch","/editBranch",
+	"/addBook", "/deleteBook", "editBook"})
 public class AdminServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 
@@ -50,6 +55,8 @@ public class AdminServlet extends HttpServlet {
 		String error = null;
 		String view = null;
 		
+		
+		
 		switch (function) {
 		case "/addAuthor": {
 			String authorName = request.getParameter("authorName");
@@ -68,7 +75,6 @@ public class AdminServlet extends HttpServlet {
 			view = "/listAuthors.jsp";
 			break;
 		}
-
 		case "/deleteAuthor": {
 			String authorId = request.getParameter("authorId");
 			Author author = new Author();
@@ -108,6 +114,91 @@ public class AdminServlet extends HttpServlet {
 			view = "/listAuthors.jsp";
 			break;
 			
+		}
+		case "/addBorrower": {
+			String borrowerName = request.getParameter("borrowerName");
+			String borrowerAddress = request.getParameter("borrowerAddress");
+			String borrowerPhone = request.getParameter("borrowerPhone");
+			Borrower borrow = new Borrower();
+			borrow.setName(borrowerName);
+			borrow.setAddress(borrowerAddress);
+			borrow.setPhone(borrowerPhone);
+
+			try {
+				new AdministratorService().addBorrower(borrow);
+				error = null;
+				message = "Borrower add succesfully";
+			} catch (Exception e) {
+				e.printStackTrace();
+				message = null;
+				error = "Borrower add failed. Reason: " + e.getMessage();
+			}
+			view = "/listBorrowers.jsp";
+			break;
+		}
+		case "/deleteBorrower": {
+			String cardNo = request.getParameter("cardNo");
+			Borrower borrow = new Borrower();
+			borrow.setCardNo(Integer.parseInt(cardNo));
+
+			try {
+				new AdministratorService().deleteBorrower(borrow);
+				error = null;
+				message = "Borrower delete succesfully";
+			} catch (Exception e) {
+				e.printStackTrace();
+				message = null;
+				error = "Borrower delete failed. Reason: " + e.getMessage();
+			}
+			
+			view = "/listBorrowers.jsp";
+			break;
+		}
+		case "/editBorrower": {
+			//TODO need to implement
+			view = "/listBorrowers.jsp";
+			break;
+		}
+		case "/addBranch": {
+			String branchName = request.getParameter("branchName");
+			String branchAddress = request.getParameter("branchAddress");
+			Branch branch = new Branch();
+			branch.setName(branchName);
+			branch.setAddress(branchAddress);
+			
+			try {
+				new AdministratorService().addBranch(branch);
+				error = null;
+				message = "Branch adde succesfully";
+			} catch (Exception e) {
+				e.printStackTrace();
+				message = null;
+				error = "Branch adde failed. Reason: " + e.getMessage();
+			}
+			view = "/listBranches.jsp";
+			break;
+		}
+		case "/deleteBranch": {
+			String branchId = request.getParameter("branchId");
+			Branch branch = new Branch();
+			branch.setBranchId(Integer.parseInt(branchId));
+			
+			try {
+				new AdministratorService().deleteBranch(branch);
+				error = null;
+				message = "Branch delete succesfully";
+			} catch (Exception e) {
+				e.printStackTrace();
+				message = null;
+				error = "Branch delete failed. Reason: " + e.getMessage();
+			}
+			view = "/listBranches.jsp";
+			break;
+		}
+		case "/editBranch": {
+			//TODO need to implement
+			view = "/listBranches.jsp";
+			break;
 		}
 		default:
 			break;
