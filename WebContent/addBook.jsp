@@ -1,3 +1,4 @@
+<%@page import="com.gcit.jdbc.entity.Publisher"%>
 <%@page import="com.gcit.jdbc.entity.Genre"%>
 <%@page import="java.util.ArrayList"%>
 <%@page import="java.util.List"%>
@@ -13,6 +14,7 @@
 	
 	List<Author> authors = new AdministratorService().getAllAuthors(); 
 	List<Genre> gens = new AdministratorService().getAllGenres(); 
+	List<Publisher> pubs = new AdministratorService().getAllPublisher();
 	
 	List<Author> selectedAuthors = new ArrayList<Author>();
 	List<Genre> selectedGens = new ArrayList<Genre>();
@@ -26,9 +28,12 @@
 <title>Insert title here</title>
 
 <script>
-	function selectMove(s1, s2) {
+	function selectMove(id1, id2) {
 		var name;
-		for (var i = 0; i < s1.length; i++ )
+		var s1 = document.getElementById(id1);
+		var s2 = document.getElementById(id2);
+		
+		for (var i = s1.length-1; i >= 0; i-- )
 		{
 			if(s1[i].selected) {
 				s2.appendChild(s1[i]);
@@ -36,27 +41,40 @@
 		}
 	}
 	
+	function addBook() {
+		document.getElementById('addBookName').value = document.getElementById('bookName').value;
+		
+		var pubList = document.getElementById("publisherList");
+		var pub = pubList.options[pubList.selectedIndex].value;
+		document.getElementById('addPubId').value = pub;
+		document.addBookForm.submit();
+	}
+	
 </script>
 
 </head>
 <body>
+	<form name="addBookForm" action="addBook" method="post">
+		<input type="hidden" id="addBookName" name="bookName" />
+		<input type="hidden" id="addPubId" name="publisherId" />
+	</form>
+
 	<h4>Add Book</h4>
 	<div>
-		Book Name: <input type="text" name="bookName" />
+		Book Name: <input type="text" id=bookName name="bookName" />
 	</div>
-	<br><br>
-	
+	<br>
 	<h4>Add Author</h4>
-	<div><select name="author" multiple style="width:150px">
+	<div><select name="author" multiple style="width:150px" id="availableAuthors">
 		<%for(Author author:authors) {%>
 			<option value="<%=author.getAuthorId() %>"><%=author.getAuthorName() %></option>
 		<% } %>
 	</select>
 	
-	<input type="button" value="insert" onclick="selectMove(document.getElementsByTagName('select')[0], document.getElementsByTagName('select')[1]);"/>
-	<input type="button" value="remove" onclick="selectMove(document.getElementsByTagName('select')[1],document.getElementsByTagName('select')[0]);"/>
+	<input type="button" value="insert" onclick="selectMove('availableAuthors','selectedAuthors');"/>
+	<input type="button" value="remove" onclick="selectMove('availableAuthors','selectedAuthors');"/>
 		
-	<select name="selectAuthor" multiple style="width:150px">
+	<select name="selectAuthor" multiple style="width:150px" id="selectedAuthors">
 		<%for(Author author:selectedAuthors) { %>
 			<option value="<%=author.getAuthorId() %>"><%=author.getAuthorName() %></option>
 		<% } %>
@@ -79,6 +97,17 @@
 		<% } %>
 	</select>
 	</div>	
-
+	
+	<h4>Select Publisher</h4>
+	<div><select name="publisher" id="publisherList" style="width:150px">
+		<%for(Publisher pub:pubs) {%>
+			<option value="<%=pub.getPublisherId() %>"><%=pub.getPublisherName()%></option>
+		<% } %>
+	</select>
+	</div>	
+	<br>
+	<div>
+	<input type="button" value="submit" onclick="javascript:addBook()"/>
+	</div>
 </body>
 </html>

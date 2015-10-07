@@ -11,8 +11,10 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import com.gcit.jdbc.entity.Author;
+import com.gcit.jdbc.entity.Book;
 import com.gcit.jdbc.entity.Borrower;
 import com.gcit.jdbc.entity.Branch;
+import com.gcit.jdbc.entity.Publisher;
 import com.gcit.jdbc.service.AdministratorService;
 
 /**
@@ -202,6 +204,26 @@ public class AdminServlet extends HttpServlet {
 		}
 		case "/addBook": {
 			//TODO need to implement
+			String bookName = request.getParameter("bookName");
+			String pubId = request.getParameter("publisherId");
+			
+			Publisher pub = new Publisher();
+			pub.setPublisherId(Integer.parseInt(pubId));
+			
+			Book bk = new Book(); 
+			bk.setTitle(bookName);
+			bk.setPublisher(pub);
+			
+			System.out.println("title="+bk.getTitle()+"pubId="+pub.getPublisherId());
+			
+			try {
+				new AdministratorService().addBook(bk);
+			} catch (Exception e) {
+				e.printStackTrace();
+				message = null;
+				error = "book add failed. Reason: " + e.getMessage();
+			}
+			
 			view = "/listBranches.jsp";
 			break;
 		}

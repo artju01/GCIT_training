@@ -20,22 +20,31 @@ public class BookDAO extends BaseDAO {
 					"insert into tbl_book (title, pubId) values (?,?)",
 					new Object[] { book.getTitle(),
 							book.getPublisher().getPublisherId() });
-			for (Author auth : book.getAuthors()) {
-				save("insert into tbl_book_authors (bookId, authorId) values (?,?)",
-						new Object[] { bookId, auth.getAuthorId() });
-			}
-
-			for (Genre genre : book.getGenres()) {
-				save("insert into tbl_book_genres (bookId, genreId) values (?,?)",
-						new Object[] { bookId, genre.getGenreId() });
-			}
 			
-			for (BookCopies copy : book.getCopies()) {
-				if (copy.getBranch() != null) {
-					save ("insert into tbl_book_copies (bookId, branchId, noOfCopies)",
-							new Object[] {book.getBookId(), copy.getBranch().getBranchId(), copy.getNoOfCopies()});
+			if (book.getAuthors() != null) {
+				for (Author auth : book.getAuthors()) {
+					save("insert into tbl_book_authors (bookId, authorId) values (?,?)",
+							new Object[] { bookId, auth.getAuthorId() });
 				}
 			}
+			
+
+			if (book.getGenres() != null) {
+				for (Genre genre : book.getGenres()) {
+					save("insert into tbl_book_genres (bookId, genreId) values (?,?)",
+							new Object[] { bookId, genre.getGenreId() });
+				}
+			}
+			
+			if (book.getCopies() != null) {
+				for (BookCopies copy : book.getCopies()) {
+					if (copy.getBranch() != null) {
+						save ("insert into tbl_book_copies (bookId, branchId, noOfCopies)",
+								new Object[] {book.getBookId(), copy.getBranch().getBranchId(), copy.getNoOfCopies()});
+					}
+				}
+			}
+			
 		}
 	}
 
@@ -151,8 +160,9 @@ public class BookDAO extends BaseDAO {
 
 	@Override
 	protected int convertResultCount(ResultSet rs) throws SQLException {
-		if(rs.next())
-			return rs.getInt("bookId");
+		if(rs.next()) {
+			return rs.getInt(1);
+		}
 		else 
 			return -1;
 	}

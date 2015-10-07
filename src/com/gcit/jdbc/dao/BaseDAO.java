@@ -33,6 +33,7 @@ public abstract class BaseDAO {
 			stmt.setObject(count, obj);
 			count++;
 		}
+		stmt.executeUpdate();
 		
 		ResultSet rs = stmt.getGeneratedKeys();
 		
