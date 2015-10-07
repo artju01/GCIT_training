@@ -57,7 +57,9 @@
 	<form name="addBookForm" action="addBook" method="post">
 		<input type="hidden" id="addBookName" name="bookName" />
 		<input type="hidden" id="addPubId" name="publisherId" />
-	</form>
+		<input type="hidden" id="addAuthor" name="authors" />
+		<input type="hidden" id="addGenre" name="genres" />
+	
 
 	<h4>Add Book</h4>
 	<div>
@@ -72,7 +74,7 @@
 	</select>
 	
 	<input type="button" value="insert" onclick="selectMove('availableAuthors','selectedAuthors');"/>
-	<input type="button" value="remove" onclick="selectMove('availableAuthors','selectedAuthors');"/>
+	<input type="button" value="remove" onclick="selectMove('selectedAuthors','availableAuthors');"/>
 		
 	<select name="selectAuthor" multiple style="width:150px" id="selectedAuthors">
 		<%for(Author author:selectedAuthors) { %>
@@ -82,16 +84,16 @@
 	</div>	
 	
 	<h4>Add Genre</h4>
-	<div><select name="genre" multiple style="width:150px">
+	<div><select name="genre" multiple style="width:150px" id="availableGenres">
 		<%for(Genre gen:gens) {%>
 			<option value="<%=gen.getGenreId() %>"><%=gen.getGenreName() %></option>
 		<% } %>
 	</select>
 	
-	<input type="button" value="insert" onclick="selectMove(document.getElementsByTagName('select')[2], document.getElementsByTagName('select')[3]);"/>
-	<input type="button" value="remove" onclick="selectMove(document.getElementsByTagName('select')[3],document.getElementsByTagName('select')[2]);"/>
+	<input type="button" value="insert" onclick="selectMove('availableGenres','selectedGenres');"/>
+	<input type="button" value="remove" onclick="selectMove('selectedGenres','availableGenres');"/>
 		
-	<select name="selectGen" multiple style="width:150px">
+	<select name="selectGen" multiple style="width:150px" id="selectedGenres">
 		<%for(Genre gen:selectedGens) { %>
 			<option value="<%=gen.getGenreId() %>"><%=gen.getGenreName() %></option>
 		<% } %>
@@ -109,5 +111,7 @@
 	<div>
 	<input type="button" value="submit" onclick="javascript:addBook()"/>
 	</div>
+	
+	</form>
 </body>
 </html>

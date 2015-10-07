@@ -28,10 +28,9 @@ public class BookDAO extends BaseDAO {
 				}
 			}
 			
-
 			if (book.getGenres() != null) {
 				for (Genre genre : book.getGenres()) {
-					save("insert into tbl_book_genres (bookId, genreId) values (?,?)",
+					save("insert into tbl_book_genres (bookId, genre_id) values (?,?)",
 							new Object[] { bookId, genre.getGenreId() });
 				}
 			}

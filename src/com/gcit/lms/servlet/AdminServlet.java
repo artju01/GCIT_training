@@ -2,6 +2,8 @@ package com.gcit.lms.servlet;
 
 import java.io.IOException;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -14,6 +16,7 @@ import com.gcit.jdbc.entity.Author;
 import com.gcit.jdbc.entity.Book;
 import com.gcit.jdbc.entity.Borrower;
 import com.gcit.jdbc.entity.Branch;
+import com.gcit.jdbc.entity.Genre;
 import com.gcit.jdbc.entity.Publisher;
 import com.gcit.jdbc.service.AdministratorService;
 
@@ -23,7 +26,7 @@ import com.gcit.jdbc.service.AdministratorService;
 @WebServlet({"/addAuthor","/deleteAuthor","/editAuthor",
 	"/addBorrower","/deleteBorrower","/editBorrower",
 	"/addBranch","/deleteBranch","/editBranch",
-	"/addBook"})
+	"/addBook", "/deleteBook"})
 public class AdminServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 
@@ -206,13 +209,31 @@ public class AdminServlet extends HttpServlet {
 			//TODO need to implement
 			String bookName = request.getParameter("bookName");
 			String pubId = request.getParameter("publisherId");
+			String[] authorId = request.getParameterValues("selectAuthor");
+			String[] genreId = request.getParameterValues("selectGen");
 			
 			Publisher pub = new Publisher();
 			pub.setPublisherId(Integer.parseInt(pubId));
 			
+			List<Author> authors = new ArrayList<Author>();
+			for (int i=0; i<authorId.length; i++) {
+				Author auth = new Author();
+				auth.setAuthorId(Integer.parseInt(authorId[i]));
+				authors.add(auth);
+			}
+			
+			List<Genre> gens = new ArrayList<Genre>();
+			for (int i=0; i<genreId.length; i++) {
+				Genre gen = new Genre();
+				gen.setGenreId(Integer.parseInt(genreId[i]));
+				gens.add(gen);
+			}
+			
 			Book bk = new Book(); 
 			bk.setTitle(bookName);
 			bk.setPublisher(pub);
+			bk.setAuthors(authors);
+			bk.setGenres(gens);
 			
 			System.out.println("title="+bk.getTitle()+"pubId="+pub.getPublisherId());
 			
@@ -224,7 +245,7 @@ public class AdminServlet extends HttpServlet {
 				error = "book add failed. Reason: " + e.getMessage();
 			}
 			
-			view = "/listBranches.jsp";
+			view = "/listBooks.jsp";
 			break;
 		}
 		case "/editBook": {
@@ -233,8 +254,20 @@ public class AdminServlet extends HttpServlet {
 			break;
 		}
 		case "/deleteBook": {
-			//TODO need to implement
-			view = "/listBranches.jsp";
+			String bookId = request.getParameter("bookId");
+			Book book = new Book();
+			book.setBookId(Integer.parseInt(bookId));
+			
+			try {
+				new AdministratorService().deleteBook(book);
+				error = null;
+				message = "Book delete succesfully";
+			} catch (Exception e) {
+				e.printStackTrace();
+				message = null;
+				error = "Book delete failed. Reason: " + e.getMessage();
+			}
+			view = "/listBooks.jsp";
 			break;
 		}
 		default:

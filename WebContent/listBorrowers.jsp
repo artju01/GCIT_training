@@ -38,9 +38,9 @@
 </form>
 	<table>
 		<tr>
-			<td>Author Name</td>
-			<td>Edit</td>
-			<td>Delete</td>
+			<td>Name</td>
+			<td>Address</td>
+			<td>Phone</td>
 		</tr>
 		<%for(Borrower borrower : borrowers ) {%>
 		<tr>

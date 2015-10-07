@@ -38,7 +38,8 @@
 </form>
 	<table>
 		<tr>
-			<td>Author Name</td>
+			<td>Branch Name</td>
+			<td>Address</td>
 			<td>Edit</td>
 			<td>Delete</td>
 		</tr>

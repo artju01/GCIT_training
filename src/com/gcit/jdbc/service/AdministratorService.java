@@ -114,7 +114,7 @@ public class AdministratorService {
 		}
 	}
 
-	public void delateBook(Book bk) throws SQLException {
+	public void deleteBook(Book bk) throws SQLException {
 		try {
 			bookDAO.delete(bk);
 		}
