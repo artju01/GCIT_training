@@ -271,5 +271,9 @@ public class AdministratorService {
 			System.out.println(e);
 		}
 	}
+	
+	public List<Genre> getAllGenres() throws SQLException {
+		return genreDAO.readAll();
+	}
 
 }

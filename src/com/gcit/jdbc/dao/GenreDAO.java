@@ -61,6 +61,7 @@ public class GenreDAO extends BaseDAO{
 			Genre gen = new Genre();
 			gen.setGenreId(rs.getInt("genre_Id"));
 			gen.setGenreName(rs.getString("genre_name"));
+			gens.add(gen);
 		}
 		return gens;
 	}

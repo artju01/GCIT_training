@@ -21,7 +21,7 @@ import com.gcit.jdbc.service.AdministratorService;
 @WebServlet({"/addAuthor","/deleteAuthor","/editAuthor",
 	"/addBorrower","/deleteBorrower","/editBorrower",
 	"/addBranch","/deleteBranch","/editBranch",
-	"/addBook", "/deleteBook", "editBook"})
+	"/addBook"})
 public class AdminServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 
@@ -196,6 +196,21 @@ public class AdminServlet extends HttpServlet {
 			break;
 		}
 		case "/editBranch": {
+			//TODO need to implement
+			view = "/listBranches.jsp";
+			break;
+		}
+		case "/addBook": {
+			//TODO need to implement
+			view = "/listBranches.jsp";
+			break;
+		}
+		case "/editBook": {
+			//TODO need to implement
+			view = "/listBranches.jsp";
+			break;
+		}
+		case "/deleteBook": {
 			//TODO need to implement
 			view = "/listBranches.jsp";
 			break;
