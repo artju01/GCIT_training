@@ -64,7 +64,8 @@ public class AdminServlet extends HttpServlet {
 		
 		switch (function) {
 		case "/addAuthor": {
-			String authorName = request.getParameter("authorName");
+			String authorName = request.getParameter("newAuthorName");
+			System.out.println(authorName);
 			Author author = new Author();
 			author.setAuthorName(authorName);
 
@@ -81,7 +82,7 @@ public class AdminServlet extends HttpServlet {
 			break;
 		}
 		case "/deleteAuthor": {
-			String authorId = request.getParameter("authorId");
+			String authorId = request.getParameter("deletedAuthorId");
 			Author author = new Author();
 			author.setAuthorId(Integer.parseInt(authorId));
 

@@ -52,8 +52,18 @@
 	
 </script>
 
+<style>
+	.form-control {
+		width:auto;
+		display:inline-block;
+	}
+</style>
+
 </head>
 <body>
+	
+	<%@include file="menu.jsp" %>
+		
 	<form name="addBookForm" action="addBook" method="post">
 		<input type="hidden" id="addBookName" name="bookName" />
 		<input type="hidden" id="addPubId" name="publisherId" />
@@ -66,24 +76,38 @@
 		Book Name: <input type="text" id=bookName name="bookName" />
 	</div>
 	<br>
-	<h4>Add Author</h4>
-	<div><select name="author" multiple style="width:150px" id="availableAuthors">
-		<%for(Author author:authors) {%>
-			<option value="<%=author.getAuthorId() %>"><%=author.getAuthorName() %></option>
-		<% } %>
-	</select>
-	
-	<input type="button" value="insert" onclick="selectMove('availableAuthors','selectedAuthors');"/>
-	<input type="button" value="remove" onclick="selectMove('selectedAuthors','availableAuthors');"/>
-		
-	<select name="selectAuthor" multiple style="width:150px" id="selectedAuthors">
-		<%for(Author author:selectedAuthors) { %>
-			<option value="<%=author.getAuthorId() %>"><%=author.getAuthorName() %></option>
-		<% } %>
-	</select>
-	</div>	
-	
-	<h4>Add Genre</h4>
+		<h4>Add Author</h4>
+
+		<select class="form-inline" name="author" multiple
+			style="width: 150px" id="availableAuthors">
+			<%
+				for (Author author : authors) {
+			%>
+			<option value="<%=author.getAuthorId()%>"><%=author.getAuthorName()%></option>
+			<%
+				}
+			%>
+		</select>
+			<div class="btn-group-vertical">
+				<input type="button" id="btAdd" class="btn btn-primary" value=&rarr;
+					onclick="selectMove('availableAuthors','selectedAuthors');" /> <input
+					type="button" id="btRemove" class="btn btn-primary" value=&larr;
+					onclick="selectMove('selectedAuthors','availableAuthors');" />
+			</div>
+
+		 <select class="form-inline" name="selectAuthor" multiple
+			style="width: 150px" id="selectedAuthors">
+			<%
+				for (Author author : selectedAuthors) {
+			%>
+			<option value="<%=author.getAuthorId()%>"><%=author.getAuthorName()%></option>
+			<%
+				}
+			%>
+		</select>
+
+
+		<h4>Add Genre</h4>
 	<div><select name="genre" multiple style="width:150px" id="availableGenres">
 		<%for(Genre gen:gens) {%>
 			<option value="<%=gen.getGenreId() %>"><%=gen.getGenreName() %></option>
