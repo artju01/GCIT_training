@@ -4,6 +4,8 @@ import java.io.IOException;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -12,6 +14,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.gcit.jdbc.entity.Author;
 import com.gcit.jdbc.entity.Book;
 import com.gcit.jdbc.entity.Borrower;
@@ -23,7 +26,7 @@ import com.gcit.jdbc.service.AdministratorService;
 /**
  * Servlet implementation class AdminServlet
  */
-@WebServlet({"/addAuthor","/deleteAuthor","/editAuthor",
+@WebServlet({"/listAuthors","/addAuthor","/deleteAuthor","/editAuthor",
 	"/addBorrower","/deleteBorrower","/editBorrower",
 	"/addBranch","/deleteBranch","/editBranch",
 	"/addBook", "/deleteBook"})
@@ -63,12 +66,26 @@ public class AdminServlet extends HttpServlet {
 		
 		
 		switch (function) {
+		case "/listAuthors": {
+			try {
+				List<Author> authors = new AdministratorService().getAllAuthors();
+				ObjectMapper mapper = new ObjectMapper();
+				mapper.writeValue(response.getOutputStream(), authors);
+			} catch (Exception e) {
+				e.printStackTrace();
+				message = "Authors get failed. Reason: " + e.getMessage();
+				response.getWriter().write(message);
+			}
+			break;
+		}
 		case "/addAuthor": {
-			String authorName = request.getParameter("newAuthorName");
-			System.out.println(authorName);
 			Author author = new Author();
-			author.setAuthorName(authorName);
-
+			
+			Map<String, String[]> map = request.getParameterMap();
+	        for(Entry<String,String[]> entry:map.entrySet()){
+	            author.setAuthorName(entry.getValue()[0]);
+	        }
+			
 			try {
 				new AdministratorService().addAuthor(author);
 				error = null;
@@ -78,13 +95,15 @@ public class AdminServlet extends HttpServlet {
 				message = null;
 				error = "Author add failed. Reason: " + e.getMessage();
 			}
-			view = "/listAuthors.jsp";
 			break;
 		}
 		case "/deleteAuthor": {
-			String authorId = request.getParameter("deletedAuthorId");
 			Author author = new Author();
-			author.setAuthorId(Integer.parseInt(authorId));
+			
+			Map<String, String[]> map = request.getParameterMap();
+	        for(Entry<String,String[]> entry:map.entrySet()){
+	            author.setAuthorId(Integer.parseInt(entry.getValue()[0]));
+	        }
 
 			try {
 				new AdministratorService().deleteAuthor(author);
@@ -96,17 +115,23 @@ public class AdminServlet extends HttpServlet {
 				error = "Author delete failed. Reason: " + e.getMessage();
 			}
 			
-			view = "/listAuthors.jsp";
+			//view = "/adminAuthor.jsp";
 			break;
 			
 		}
 		case "/editAuthor" : {
-			String authorId = request.getParameter("authorId");
-			String authorName = request.getParameter("newName");
 			Author author = new Author();
-			author.setAuthorId(Integer.parseInt(authorId));
-			author.setAuthorName(authorName);
-			
+
+			Map<String, String[]> map = request.getParameterMap();
+	        for(Entry<String,String[]> entry:map.entrySet()){
+	        	if (entry.getKey().equals("authorId")) {	
+	        		author.setAuthorId(Integer.parseInt(entry.getValue()[0]));
+	        	}
+	        	else if (entry.getKey().equals("authorName")) {
+	        		author.setAuthorName(entry.getValue()[0]);
+	        	}
+	        }
+
 			try {
 				new AdministratorService().updateAuthor(author);
 				error = null;
@@ -117,7 +142,7 @@ public class AdminServlet extends HttpServlet {
 				error = "Author edit failed. Reason: " + e.getMessage();
 			}
 			
-			view = "/listAuthors.jsp";
+			//view = "/adminAuthor.jsp";
 			break;
 			
 		}
@@ -276,10 +301,12 @@ public class AdminServlet extends HttpServlet {
 		}
 
 		//forward
-		request.setAttribute("message", message);
-		request.setAttribute("error", error);
-		RequestDispatcher rd = getServletContext().getRequestDispatcher(view);
-		rd.forward(request, response);
+		if (view != null) {
+			request.setAttribute("message", message);
+			request.setAttribute("error", error);
+			RequestDispatcher rd = getServletContext().getRequestDispatcher(view);
+			rd.forward(request, response);
+		}
 		
 		//redirect
 		

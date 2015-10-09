@@ -1,70 +1,88 @@
 <!DOCTYPE html>
-<!-- saved from url=(0050)http://getbootstrap.com/examples/navbar-fixed-top/ -->
-<html lang="en"><script type="text/javascript" src="chrome-extension://kajfghlhfkcocafkcjlajldicbikpgnp/catcher.js"><!-- script injected by Request Maker --></script><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
-    <meta name="description" content="">
-    <meta name="author" content="">
-    <link rel="icon" href="http://getbootstrap.com/favicon.ico">
-
-    <title>LMS</title>
-
-    <!-- Bootstrap core CSS -->
-    <link href="./scripts/bootstrap.min.css" rel="stylesheet">
-
-    <!-- Custom styles for this template -->
-    <link href="./scripts/navbar-fixed-top.css" rel="stylesheet">
-
-    <!-- Just for debugging purposes. Don't actually copy these 2 lines! -->
-    <!--[if lt IE 9]><script src="../../assets/js/ie8-responsive-file-warning.js"></script><![endif]-->
-    <script src="./scripts/ie-emulation-modes-warning.js"></script>
-
-    <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
-    <!--[if lt IE 9]>
-      <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
-      <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
-    <![endif]-->
-
-    <!-- Fixed navbar -->
-    <nav class="navbar navbar-default navbar-fixed-top">
-      <div class="container">
-        <div class="navbar-header">
-          <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
-            <span class="sr-only">Toggle navigation</span>
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-          </button>
-          <a class="navbar-brand" href="http://getbootstrap.com/examples/navbar-fixed-top/#">LMS</a>
-        </div>
-        <div id="navbar" class="navbar-collapse collapse">
-          <ul class="nav navbar-nav">
-            <li class="active"><a href="index.jsp">Home</a></li>
-            <li class="dropdown">
-          		<a href="admin.jsp" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Administrator <span class="caret"></span></a>
-          		<ul class="dropdown-menu">
-            		<li><a href="listAuthors.jsp">Author</a></li>
-            		<li role="separator" class="divider"></li>
-            		<li><a href="addBook.jsp">Book</a></li>
-            		<li role="separator" class="divider"></li>
-            		<li><a href="#">Branch</a></li>
-            		<li role="separator" class="divider"></li>
-            		<li><a href="#">Borrower</a></li>
-          		</ul>
-        	</li>
-            <li><a href="librarian.jsp">Librarian</a></li>
-            <li><a href="borrower.jsp">Borrower</a></li>
-          </ul>
-        </div><!--/.nav-collapse -->
-      </div>
-    </nav>
-<!-- Bootstrap core JavaScript
+<html lang="en">
+  <head>
+    
+  </head>
+<!-- NAVBAR
 ================================================== -->
-<!-- Placed at the end of the document so the pages load faster -->
-<script src="./scripts/jquery.min.js"></script>
+  <body>
+    <header id="header">      
+        <div class="container">
+            <div class="row">
+                <div class="col-sm-12 overflow">
+                   <div class="social-icons pull-right">
+                        <ul class="nav nav-pills">
+                            <li><a href=""><i class="fa fa-facebook"></i></a></li>
+                            <li><a href=""><i class="fa fa-twitter"></i></a></li>
+                            <li><a href=""><i class="fa fa-google-plus"></i></a></li>
+                            <li><a href=""><i class="fa fa-dribbble"></i></a></li>
+                            <li><a href=""><i class="fa fa-linkedin"></i></a></li>
+                        </ul>
+                    </div> 
+                </div>
+             </div>
+        </div>
+        <div class="navbar navbar-inverse" role="banner">
+            <div class="container">
+                <div class="navbar-header">
+                    <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                        <span class="sr-only">Toggle navigation</span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                    </button>
+
+                    <a class="navbar-brand" href="index.html">
+                    	<h1><img src="images/logo.png" alt="logo"></h1>
+                    </a>
+                    
+                </div>
+                <div class="collapse navbar-collapse">
+                    <ul class="nav navbar-nav navbar-right">
+                        <li class="active"><a href="index.jsp">Home</a></li>
+                        <li class="dropdown"><a href="#">Administrator <i class="fa fa-angle-down"></i></a>
+                            <ul role="menu" class="sub-menu">
+                                <li><a href="adminAuthor.jsp">Author</a></li>
+                                <li><a href="adminBook.jsp">Book</a></li>
+                                <li><a href="service.html">Branch</a></li>
+                                <li><a href="pricing.html">Borrower</a></li>       
+                                <li><a href="coming-soon.html">Coming Soon</a></li>
+                            </ul>
+                        </li>                    
+                        <li class="dropdown"><a href="blog.html">Librarian <i class="fa fa-angle-down"></i></a>
+                            <ul role="menu" class="sub-menu">
+                                <li><a href="blog.html">Branch</a></li>
+                                <li><a href="blogtwo.html">Book</a></li>   
+                            </ul>
+                        </li>
+                        <li class="dropdown"><a href="portfolio.html">Borrower <i class="fa fa-angle-down"></i></a>
+                            <ul role="menu" class="sub-menu">
+                                <li><a href="portfolio.html">Check out book</a></li>
+                                <li><a href="portfoliofour.html">Check in bookr</a></li>
+                            </ul>
+                        </li>                         
+                        <li><a href="shortcodes.html ">Shortcodes</a></li>                    
+                    </ul>
+                </div>
+                <div class="search">
+                    <form role="form">
+                        <i class="fa fa-search"></i>
+                        <div class="field-toggle">
+                            <input type="text" class="search-form" autocomplete="off" placeholder="Search">
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </header>
+  </body>
+  
+ <script src="./scripts/jquery.min.js"></script>
 <script src="./scripts/bootstrap.min.js"></script>
 <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
 <script src="./scripts/ie10-viewport-bug-workaround.js"></script>
-    
+<script src="./scripts/handlebars-v4.0.2.js"></script>
+
+</html>
+
+
