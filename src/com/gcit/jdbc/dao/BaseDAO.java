@@ -7,9 +7,21 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 
+
 public abstract class BaseDAO {
 
 	protected abstract Object convertResult(ResultSet rs) throws SQLException;
+	
+	public int getPageNo() {
+		return pageNo;
+	}
+
+	public void setPageNo(int pageNo) {
+		this.pageNo = pageNo;
+	}
+
+	protected int pageNo;
+	protected int pageSize = 10;
 	
 	protected Connection getConnection() throws SQLException {
 		try {
@@ -55,7 +67,6 @@ public abstract class BaseDAO {
 	}
 	
 	protected Object read(String query, Object[] values) throws SQLException {
-		//System.out.println(query);
 		PreparedStatement stmt = getConnection().prepareStatement(query);
 
 		if(values != null) {
@@ -70,6 +81,31 @@ public abstract class BaseDAO {
 
 		return this.convertResult(rs);
 
+	}
+	
+	protected int readCount(String query) throws SQLException {
+		PreparedStatement stmt = getConnection().prepareStatement(query);
+		
+		ResultSet rs = stmt.executeQuery();
+		int count = 0;
+		while (rs.next()) {
+			count = rs.getInt("count(*)");
+		}
+		
+		return count;
+	}
+	
+	protected String setPageLimits(String query) {
+		StringBuilder sb = new StringBuilder(query);
+		System.out.println("page numbeer :"+pageNo);
+		if (pageNo == 1) {
+			sb.append("  LIMIT " + (pageNo - 1)*pageSize + "," + pageSize*pageNo);
+		}
+		else {
+			sb.append("  LIMIT " + (((pageNo - 1)*pageSize)+1) + "," + pageSize*pageNo);
+		}
+		
+		return sb.toString();
 	}
 
 }

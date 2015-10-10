@@ -26,13 +26,12 @@ import com.gcit.jdbc.service.AdministratorService;
 /**
  * Servlet implementation class AdminServlet
  */
-@WebServlet({"/listAuthors","/addAuthor","/deleteAuthor","/editAuthor",
+@WebServlet({"/countAuthors","/searchAuthorsWithIndex","/searchAuthors","/listAuthors","/listAuthorsWithPage","/addAuthor","/deleteAuthor","/editAuthor",
 	"/addBorrower","/deleteBorrower","/editBorrower",
 	"/addBranch","/deleteBranch","/editBranch",
 	"/addBook", "/deleteBook"})
 public class AdminServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
-
 	/**
 	 * @see HttpServlet#HttpServlet()
 	 */
@@ -68,7 +67,10 @@ public class AdminServlet extends HttpServlet {
 		switch (function) {
 		case "/listAuthors": {
 			try {
-				List<Author> authors = new AdministratorService().getAllAuthors();
+				String pageNo = request.getParameter("pageNo");
+				if(pageNo == null) 
+					pageNo = "1";
+				List<Author> authors = new AdministratorService().getAllAuthors(Integer.parseInt(pageNo));
 				ObjectMapper mapper = new ObjectMapper();
 				mapper.writeValue(response.getOutputStream(), authors);
 			} catch (Exception e) {
@@ -78,6 +80,63 @@ public class AdminServlet extends HttpServlet {
 			}
 			break;
 		}
+		
+		case "/listAuthorsWithPage": {
+			try {
+				String pageNo = request.getParameter("pageNo");
+				if(pageNo == null) 
+					pageNo = "1";
+				List<Author> authors = new AdministratorService().getAllAuthors(Integer.parseInt(pageNo));
+				ObjectMapper mapper = new ObjectMapper();
+				mapper.writeValue(response.getOutputStream(), authors);
+			} catch (Exception e) {
+				e.printStackTrace();
+				message = "Authors get failed. Reason: " + e.getMessage();
+				response.getWriter().write(message);
+			}
+			break;
+		}
+		
+		case "/countAuthors": {
+			try {
+				int count = new AdministratorService().getAuthorCount();
+				ObjectMapper mapper = new ObjectMapper();
+				mapper.writeValue(response.getOutputStream(), count);
+			} catch (Exception e) {
+				e.printStackTrace();
+				message = "Authors get failed. Reason: " + e.getMessage();
+				response.getWriter().write(message);
+			}
+			break;
+		}
+		
+		case "/searchAuthors": {
+			try {
+				List<Author> authors = new AdministratorService().searchAuthors(request.getParameter("searchText"));
+				ObjectMapper mapper = new ObjectMapper();
+				mapper.writeValue(response.getOutputStream(), authors);
+			} catch (Exception e) {
+				e.printStackTrace();
+				message = "Authors get failed. Reason: " + e.getMessage();
+				response.getWriter().write(message);
+			}
+			break;
+		}
+		
+		case "/searchAuthorsWithIndex": {
+			try {
+				List<Author> authors = new AdministratorService().searchAuthorsWithPage(request.getParameter("searchText"),
+						Integer.parseInt(request.getParameter("page")));
+				ObjectMapper mapper = new ObjectMapper();
+				mapper.writeValue(response.getOutputStream(), authors);
+			} catch (Exception e) {
+				e.printStackTrace();
+				message = "Authors get failed. Reason: " + e.getMessage();
+				response.getWriter().write(message);
+			}
+			break;
+		}
+		
 		case "/addAuthor": {
 			Author author = new Author();
 			
@@ -97,6 +156,7 @@ public class AdminServlet extends HttpServlet {
 			}
 			break;
 		}
+		
 		case "/deleteAuthor": {
 			Author author = new Author();
 			
@@ -120,8 +180,13 @@ public class AdminServlet extends HttpServlet {
 			
 		}
 		case "/editAuthor" : {
+			try {
 			Author author = new Author();
-
+			
+			//ObjectMapper mapper = new ObjectMapper();
+			//System.out.println(request.getInputStream());
+			//author = mapper.readValue(request.getInputStream() , Author.class);
+			
 			Map<String, String[]> map = request.getParameterMap();
 	        for(Entry<String,String[]> entry:map.entrySet()){
 	        	if (entry.getKey().equals("authorId")) {	
@@ -132,7 +197,6 @@ public class AdminServlet extends HttpServlet {
 	        	}
 	        }
 
-			try {
 				new AdministratorService().updateAuthor(author);
 				error = null;
 				message = "Author edit succesfully";

@@ -29,7 +29,11 @@ public class AuthorDAO extends BaseDAO {
 				new Object[] { auth.getAuthorId() });
 		
 	}
-
+	
+	public int readAuthorCount() throws SQLException {
+		return readCount("select count(*) from tbl_author");
+	}
+	
 	@SuppressWarnings("unchecked")
 	public Author readOne(int authorId) throws SQLException {
 		List<Author> authors = (List<Author>) read(
@@ -56,8 +60,7 @@ public class AuthorDAO extends BaseDAO {
 
 	@SuppressWarnings("unchecked")
 	public List<Author> readAll() throws SQLException {
-		List<Author> read = (List<Author>) read("select * from tbl_author", null);
-		return read;
+		return (List<Author>) read(setPageLimits("select * from tbl_author"), null);
 	}
 
 	@SuppressWarnings("unchecked")
@@ -65,6 +68,21 @@ public class AuthorDAO extends BaseDAO {
 		return (List<Author>) read(
 				"select * from tbl_author where authorId in (select authorId from tbl_book_authors where bookId = ?)",
 				new Object[] { bk.getBookId() });
+	}
+	
+	@SuppressWarnings("unchecked")
+	public List<Author> readAllByName(String authorName) throws SQLException {
+		String searchText = '%'+authorName+'%';
+		return (List<Author>) read("select * from tbl_author where authorName like ?", new Object[] { searchText });
+	}
+	
+	@SuppressWarnings("unchecked")
+	public List<Author> readAllByNameWithPage(String authorName, int pageNo) throws SQLException {
+		String searchText = '%'+authorName+'%';
+		this.setPageNo(pageNo);
+		String query = setPageLimits("select * from tbl_author");
+		query = "select * from ("+query+") as t1 where authorName like ?";
+		return (List<Author>) read(query, new Object[] { searchText });
 	}
 	
 	@Override

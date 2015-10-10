@@ -132,9 +132,19 @@ public class AdministratorService {
 			System.out.println(e);
 		}	
 	}
+
+	public List<Author> getAllAuthors(int pageNo) throws SQLException {
+		if(pageNo <= 0)
+			pageNo = 1;
+		
+		authorDAO.setPageNo(pageNo);
+		List<Author> authors = authorDAO.readAll();
+		
+		return authors;
+	}
 	
-	public List<Author> getAllAuthors() throws SQLException {
-		return authorDAO.readAll();
+	public int getAuthorCount() throws SQLException {
+		return authorDAO.readAuthorCount();
 	}
 	
 	public void addAuthor(Author author) throws SQLException {
@@ -145,6 +155,19 @@ public class AdministratorService {
 			System.out.println(e);
 		}
 		
+	}
+
+	public List<Author> searchAuthors(String searchText) throws SQLException {
+		AuthorDAO ad = new AuthorDAO();
+		List<Author> authors = ad.readAllByName(searchText);
+
+		return authors;
+	}
+	
+	public List<Author> searchAuthorsWithPage(String searchText, int pageNo) throws SQLException {
+		AuthorDAO ad = new AuthorDAO();
+		List<Author> authors = ad.readAllByNameWithPage(searchText,pageNo);
+		return authors;
 	}
  	
 	public void updateAuthor(Author author) throws SQLException {

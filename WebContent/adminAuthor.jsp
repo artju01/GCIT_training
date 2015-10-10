@@ -77,6 +77,18 @@ th{
 						<br>
 					</div>
 					<div class="container">
+						<table>
+							<thead>
+								<tr>
+									<td><input type="text" placeholder="Enter text to search"
+										id="searchText" onkeyup="javascript:searchAuthorsFromCurrntPage()" /></td>
+								</tr>
+							</thead>
+							<thead>
+								<tr id="pageNo">
+								</tr>
+							</thead>
+						</table>
 						<table class="table table-hover">
 							<thead>
 								<tr>
@@ -163,6 +175,11 @@ th{
   </tr>
 </script>
 
+<script id="pageNo-template" type="text/x-handlebars-template">
+  	<td><a href="javascript:pageAuthors({{pageNo}});">{{pageNo}}</a></td>
+	<td>&nbsp;</td>
+</script>
+
 <script>
 	var source = $("#entry-template").html();
 	var template = Handlebars.compile(source);
@@ -179,6 +196,37 @@ th{
 		});
 		$("#authorsData").html(dataString);
 	});
+	
+	
+	var pageSource = $("#pageNo-template").html();
+	var pageNoTemplate = Handlebars.compile(pageSource);
+	var pageDataString;
+	$.ajax({
+		method : "POST",
+		url : "countAuthors"
+	}).done(function(data) {
+		var count = $.parseJSON(data);
+		var page = Math.ceil(count/10);
+		var jsonPage = [];
+		for ( var i = 1; i<= page; i++ ) {
+			var pageObj = {
+					"pageNo":i
+			}
+			jsonPage.push(pageObj);
+		}
+		
+		//pageDataString +="<td><input type=\"text\" placeholder=\"Enter text to search\" id=\"searchText\" onkeyup=\"javascript:serachAuthors();\"/></td> ";
+		/*<td><input type="text" placeholder="Enter text to search" id="searchText" onkeyup="javascript:searchAuthors();" /> </td>*/
+		
+		$.each(jsonPage, function(i, item) {
+			var html = pageNoTemplate(item);
+			pageDataString += html;
+		});
+		
+		//console.log(pageDataString);
+		$("#pageNo").html(pageDataString)
+	});
+
 </script>
 
 <script>
@@ -228,6 +276,8 @@ th{
 		});
 	}
 	
+	var currentPage = 1;
+	
 	function reloadAuthorList() {
 		var source = $("#entry-template").html();
 		var template = Handlebars.compile(source);
@@ -235,7 +285,8 @@ th{
 		var dataString;
 		$.ajax({
 			method : "POST",
-			url : "listAuthors"
+			url : "listAuthorsWithPage",
+			data : {pageNo:currentPage}
 		}).done(function(data) {
 			data = $.parseJSON(data);
 			$.each(data, function(i, item) {
@@ -258,6 +309,60 @@ th{
 			reloadAuthorList();
 		});
 	}
+	
+	
+	function pageAuthors(page) {
+		currentPage = page;
+		dataString = "";
+		$.ajax({
+			  method: "POST",
+			  url: "listAuthors",
+			  data: {pageNo: page}
+			}).done(function( data ) {
+				data = $.parseJSON(data);
+				$.each(data, function(i, item) {
+					var html = template(item);
+					dataString += html;
+				});
+				$("#authorsData").html(dataString);
+			});
+		
+	}
+	
+	function searchAuthorsFromCurrntPage() {
+		dataString = "";
+		$.ajax({
+			  method: "POST",
+			  url: "searchAuthorsWithIndex",
+			  data: {
+				  		searchText: $("#searchText").val(),
+						page: currentPage  
+			 		}
+			}).done(function( data ) {
+				data = $.parseJSON(data);
+				$.each(data, function(i, item) {
+					var html = template(item);
+					dataString += html;
+				});
+				$("#authorsData").html(dataString);
+			});
+	} 
+	
+	function searchAuthors() {
+		dataString = "";
+		$.ajax({
+			  method: "POST",
+			  url: "searchAuthors",
+			  data: {searchText: $("#searchText").val()}
+			}).done(function( data ) {
+				data = $.parseJSON(data);
+				$.each(data, function(i, item) {
+					var html = template(item);
+					dataString += html;
+				});
+				$("#authorsData").html(dataString);
+			});
+	} 
 
 </script>
 
