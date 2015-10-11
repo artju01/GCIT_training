@@ -198,7 +198,6 @@
 		$("#branchEntry").html(dataString);
 		
 		$(".portfolio-thumb img").each(function( index ) {
-			console.log("sss");
 			var number = Math.floor(Math.random() * 20) + 1;
 			this.src = "images/portfolio/"+number+".jpg";
 		});
@@ -237,7 +236,6 @@
 
 <script>
 	function launchModal(id, name, address) {
-		console.log("Edit Branch"+"("+name+")");
 		$('#modalTitle').html("Edit Branch"+" ("+name+")");
 		$('#updatedBranchId').val(id);
 		$('#updatedBranchName').val(name);
@@ -314,15 +312,17 @@
 				jsonPage.push(pageObj);
 			}
 			
+			pageDataString += "<li><a href=\"javascript:previousPage();\">left</a></li>"
 			
 			$.each(jsonPage, function(i, item) {
 				var html = pageNoTemplate(item);
 				pageDataString += html;
 			});
 			
-			//console.log(pageDataString);
-			$("#pageNo").html(pageDataString)
+			pageDataString += "<li><a href=\"javascript:previousPage();\">right</a></li>"
 			
+			$("#pageData").html(pageDataString)
+			console.log(pageDataString);
 			reloadBranchList();
 		});
 	}
@@ -352,7 +352,6 @@
 			$("#branchEntry").html(dataString);
 			
 			$(".portfolio-thumb img").each(function( index ) {
-				console.log("sss");
 				var number = Math.floor(Math.random() * 20) + 1;
 				this.src = "images/portfolio/"+number+".jpg";
 			});
@@ -396,7 +395,6 @@
 				$("#branchEntry").html(dataString);
 				
 				$(".portfolio-thumb img").each(function( index ) {
-					console.log("sss");
 					var number = Math.floor(Math.random() * 20) + 1;
 					this.src = "images/portfolio/"+number+".jpg";
 				});

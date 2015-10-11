@@ -8,6 +8,7 @@ import java.util.List;
 import com.gcit.jdbc.entity.Book;
 import com.gcit.jdbc.entity.BookLoans;
 import com.gcit.jdbc.entity.Borrower;
+import com.gcit.jdbc.entity.Branch;
 
 public class BorrowerDAO extends BaseDAO {
 
@@ -17,8 +18,8 @@ public class BorrowerDAO extends BaseDAO {
 	}
 	
 	public void update(Borrower borrow) throws SQLException {
-		save("update into tbl_borrower set name = ?, address = ?, phone = ?",
-				new Object[] { borrow.getName(), borrow.getAddress(), borrow.getPhone() });
+		save("update tbl_borrower set name = ?, address = ?, phone = ? where cardNo = ?",
+				new Object[] { borrow.getName(), borrow.getAddress(), borrow.getPhone(), borrow.getCardNo() });
 		
 		save("delete from tbl_book_loans where cardNo = ?", 
 				new Object[] { borrow.getCardNo() });
@@ -57,8 +58,7 @@ public class BorrowerDAO extends BaseDAO {
 
 	@SuppressWarnings("unchecked")
 	public List<Borrower> readAll() throws SQLException {
-		List<Borrower> read = (List<Borrower>) read("select * from tbl_borrower", null);
-		return read;
+		return (List<Borrower>) read(setPageLimits("select * from tbl_borrower"), null);
 	}
 	
 	@SuppressWarnings("unchecked")
@@ -68,6 +68,15 @@ public class BorrowerDAO extends BaseDAO {
 		return read;
 	}
 
+	@SuppressWarnings("unchecked")
+	public List<Borrower> readAllByNameWithPage(String branchName, int pageNo) throws SQLException {
+		String searchText = '%'+branchName+'%';
+		this.setPageNo(pageNo);
+		String query = setPageLimits("select * from tbl_borrower");
+		query = "select * from ("+query+") as t1 where name like ?";
+		return (List<Borrower>) read(query, new Object[] { searchText });
+	}
+	
 	@Override
 	protected List<Borrower> convertResult(ResultSet rs) throws SQLException {
 		List<Borrower> borrows = new ArrayList<Borrower>();

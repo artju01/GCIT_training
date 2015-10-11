@@ -279,9 +279,14 @@ public class AdministratorService {
 		return branches;
 	}
 	
-	
-	public List<Borrower> getAllBorrower() throws SQLException {
-		return borrowDAO.readAll();
+	public List<Borrower> getAllBorrower(int pageNo) throws SQLException {
+		if(pageNo <= 0)
+			pageNo = 1;
+		
+		borrowDAO.setPageNo(pageNo);
+		List<Borrower> borrowers = borrowDAO.readAll();
+		
+		return borrowers;
 	}
 	
 	public void addBorrower(Borrower borrow) throws SQLException {
@@ -322,6 +327,12 @@ public class AdministratorService {
 		catch (SQLException e) {
 			System.out.println(e);
 		}
+	}
+	
+	public List<Borrower> searchBorrowersWithPage(String searchText, int pageNo) throws SQLException {
+		BorrowerDAO  bd = new BorrowerDAO();
+		List<Borrower> borrowers = bd.readAllByNameWithPage(searchText,pageNo);
+		return borrowers;
 	}
 	
 	public int getBookLoansCount() throws SQLException {

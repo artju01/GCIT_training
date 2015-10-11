@@ -27,7 +27,7 @@ import com.gcit.jdbc.service.AdministratorService;
  * Servlet implementation class AdminServlet
  */
 @WebServlet({"/countAuthors","/searchAuthorsWithIndex","/searchAuthors","/listAuthors","/listAuthorsWithPage","/addAuthor","/deleteAuthor","/editAuthor",
-	"/addBorrower","/deleteBorrower","/editBorrower",
+	"/addBorrower","/deleteBorrower","/editBorrower","/listBorrowers","/countBorrowers","/searchBorrowersWithIndex",
 	"/addBranch","/deleteBranch","/editBranch","/listBranches","/listBranchesWithPage","/countBranches","/searchBranchesWithIndex",
 	"/addBook", "/deleteBook"})
 public class AdminServlet extends HttpServlet {
@@ -207,9 +207,9 @@ public class AdminServlet extends HttpServlet {
 			
 		}
 		case "/addBorrower": {
-			String borrowerName = request.getParameter("borrowerName");
-			String borrowerAddress = request.getParameter("borrowerAddress");
-			String borrowerPhone = request.getParameter("borrowerPhone");
+			String borrowerName = request.getParameter("name");
+			String borrowerAddress = request.getParameter("address");
+			String borrowerPhone = request.getParameter("phone");
 			Borrower borrow = new Borrower();
 			borrow.setName(borrowerName);
 			borrow.setAddress(borrowerAddress);
@@ -224,7 +224,7 @@ public class AdminServlet extends HttpServlet {
 				message = null;
 				error = "Borrower add failed. Reason: " + e.getMessage();
 			}
-			view = "/listBorrowers.jsp";
+			//view = "/listBorrowers.jsp";
 			break;
 		}
 		case "/deleteBorrower": {
@@ -242,12 +242,70 @@ public class AdminServlet extends HttpServlet {
 				error = "Borrower delete failed. Reason: " + e.getMessage();
 			}
 			
-			view = "/listBorrowers.jsp";
+			//view = "/listBorrowers.jsp";
 			break;
 		}
 		case "/editBorrower": {
-			//TODO need to implement
-			view = "/listBorrowers.jsp";
+			String cardNo = request.getParameter("cardNo");
+			Borrower borrow = new Borrower();
+			borrow.setCardNo(Integer.parseInt(cardNo));
+			borrow.setName(request.getParameter("name"));
+			borrow.setAddress(request.getParameter("address"));
+			borrow.setPhone(request.getParameter("phone"));
+			
+			try {
+				new AdministratorService().updateBorrower(borrow);
+				error = null;
+				message = "Borrower edit succesfully";
+			} catch (Exception e) {
+				e.printStackTrace();
+				message = null;
+				error = "Borrower edit failed. Reason: " + e.getMessage();
+			}
+			//view = "/listBranches.jsp";
+			break;	
+		}
+		
+		case "/listBorrowers": {
+			try {
+				String pageNo = request.getParameter("pageNo");
+				if(pageNo == null) 
+					pageNo = "1";
+				List<Borrower> borrowers = new AdministratorService().getAllBorrower(Integer.parseInt(pageNo));
+				ObjectMapper mapper = new ObjectMapper();
+				mapper.writeValue(response.getOutputStream(), borrowers);
+			} catch (Exception e) {
+				e.printStackTrace();
+				message = "Borrowers get failed. Reason: " + e.getMessage();
+				response.getWriter().write(message);
+			}
+			break;
+		}
+		
+		case "/countBorrowers": {
+			try {
+				int count = new AdministratorService().getBorrowerCount();
+				ObjectMapper mapper = new ObjectMapper();
+				mapper.writeValue(response.getOutputStream(), count);
+			} catch (Exception e) {
+				e.printStackTrace();
+				message = "Boerrowers count get failed. Reason: " + e.getMessage();
+				response.getWriter().write(message);
+			}
+			break;
+		}
+		
+		case "/searchBorrowersWithIndex": {
+			try {
+				List<Borrower> borrowers = new AdministratorService().searchBorrowersWithPage(request.getParameter("searchText"),
+						Integer.parseInt(request.getParameter("page")));
+				ObjectMapper mapper = new ObjectMapper();
+				mapper.writeValue(response.getOutputStream(), borrowers);
+			} catch (Exception e) {
+				e.printStackTrace();
+				message = "Borrower search failed. Reason: " + e.getMessage();
+				response.getWriter().write(message);
+			}
 			break;
 		}
 		
@@ -277,7 +335,7 @@ public class AdminServlet extends HttpServlet {
 				mapper.writeValue(response.getOutputStream(), branches);
 			} catch (Exception e) {
 				e.printStackTrace();
-				message = "Authors get failed. Reason: " + e.getMessage();
+				message = "Branches get failed. Reason: " + e.getMessage();
 				response.getWriter().write(message);
 			}
 			break;
@@ -346,7 +404,7 @@ public class AdminServlet extends HttpServlet {
 				mapper.writeValue(response.getOutputStream(), count);
 			} catch (Exception e) {
 				e.printStackTrace();
-				message = "Authors get failed. Reason: " + e.getMessage();
+				message = "Branch search failed. Reason: " + e.getMessage();
 				response.getWriter().write(message);
 			}
 			break;
@@ -360,7 +418,7 @@ public class AdminServlet extends HttpServlet {
 				mapper.writeValue(response.getOutputStream(), branches);
 			} catch (Exception e) {
 				e.printStackTrace();
-				message = "Authors get failed. Reason: " + e.getMessage();
+				message = "Branch search failed. Reason: " + e.getMessage();
 				response.getWriter().write(message);
 			}
 			break;
