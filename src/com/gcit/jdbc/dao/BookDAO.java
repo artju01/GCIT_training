@@ -106,6 +106,10 @@ public class BookDAO extends BaseDAO {
 		save("delete from tbl_book where bookId = ?",
 				new Object[] { book.getBookId()});
 	}
+	
+	public int readBookCount() throws SQLException {
+		return readCount("select count(*) from tbl_book");
+	}
 
 	@SuppressWarnings("unchecked")
 	public Book readOne(int bookId) throws SQLException {

@@ -44,7 +44,7 @@
                             <ul role="menu" class="sub-menu">
                                 <li><a href="adminAuthor.jsp">Author</a></li>
                                 <li><a href="adminBook.jsp">Book</a></li>
-                                <li><a href="service.html">Branch</a></li>
+                                <li><a href="adminBranch.jsp">Branch</a></li>
                                 <li><a href="pricing.html">Borrower</a></li>       
                                 <li><a href="coming-soon.html">Coming Soon</a></li>
                             </ul>

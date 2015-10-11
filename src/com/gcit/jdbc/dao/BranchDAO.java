@@ -34,6 +34,10 @@ public class BranchDAO extends  BaseDAO{
 				new Object[] { branch.getBranchId() });
 	}
 	
+	public int readBranchCount() throws SQLException {
+		return readCount("select count(*) from tbl_library_branch");
+	}
+	
 	@SuppressWarnings("unchecked")
 	public Branch readOne(int branchId) throws SQLException {
 		List<Branch> branches = (List<Branch>) read(
@@ -47,9 +51,17 @@ public class BranchDAO extends  BaseDAO{
 	}
 
 	@SuppressWarnings("unchecked")
+	public List<Branch> readAllByNameWithPage(String branchName, int pageNo) throws SQLException {
+		String searchText = '%'+branchName+'%';
+		this.setPageNo(pageNo);
+		String query = setPageLimits("select * from tbl_library_branch");
+		query = "select * from ("+query+") as t1 where branchName like ?";
+		return (List<Branch>) read(query, new Object[] { searchText });
+	}
+	
+	@SuppressWarnings("unchecked")
 	public List<Branch> readAll() throws SQLException {
-		List<Branch> read = (List<Branch>) read("select * from tbl_library_branch", null);
-		System.out.println(read);
+		List<Branch> read = (List<Branch>) read(setPageLimits("select * from tbl_library_branch"), null);
 		return read;
 	}
 

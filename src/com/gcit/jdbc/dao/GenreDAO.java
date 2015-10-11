@@ -29,6 +29,10 @@ public class GenreDAO extends BaseDAO{
 				new Object[] { gen.getGenreId() });
 	}
 
+	public int readGenreCount() throws SQLException {
+		return readCount("select count(*) from tbl_genre");
+	}
+	
 	@SuppressWarnings("unchecked")
 	public Genre readOne(int genreId) throws SQLException {
 		List<Genre> gens = (List<Genre>) read(

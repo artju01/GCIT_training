@@ -71,7 +71,8 @@ th{
 								<label for="newName">Name:</label> <input type="text"
 									class="form-control" id="newName" name="newAuthorName">
 								<button type="button" class="btn btn-default"
-									onclick="javascript:addAuthor();">Add</button>
+									onclick="javascript:addAuthor();">Add
+								</button>
 							</form>
 						</div>
 						<br>
@@ -184,7 +185,7 @@ th{
 	var source = $("#entry-template").html();
 	var template = Handlebars.compile(source);
 
-	var dataString;
+	var dataString = "";
 	$.ajax({
 		method : "POST",
 		url : "listAuthors"
@@ -215,8 +216,6 @@ th{
 			jsonPage.push(pageObj);
 		}
 		
-		//pageDataString +="<td><input type=\"text\" placeholder=\"Enter text to search\" id=\"searchText\" onkeyup=\"javascript:serachAuthors();\"/></td> ";
-		/*<td><input type="text" placeholder="Enter text to search" id="searchText" onkeyup="javascript:searchAuthors();" /> </td>*/
 		
 		$.each(jsonPage, function(i, item) {
 			var html = pageNoTemplate(item);
@@ -261,24 +260,65 @@ th{
 		});
 	}
 	function deleteAuthor(id) {
-		//document.deleteFrm.submit();
 		$('#deleteModal').modal('hide');
 		
 		var id = $('#deletedAuthorId').val();
 
-		var dataString;
+		var dataString = "";
 		$.ajax({
 			method : "POST",
 			url : "deleteAuthor",
 			data : {authorId:id}
 		}).done(function(data) {
-			reloadAuthorList();
+			pagination();
 		});
 	}
 	
 	var currentPage = 1;
+	var currentCount = 0;
+	
+	function pagination() {
+		var pageSource = $("#pageNo-template").html();
+		var pageNoTemplate = Handlebars.compile(pageSource);
+		var pageDataString;
+		$.ajax({
+			method : "POST",
+			url : "countAuthors"
+		}).done(function(data) {
+			var count = $.parseJSON(data);
+			currentCount = count;
+		
+			var page = Math.ceil(count/10);
+			var jsonPage = [];
+			for ( var i = 1; i<= page; i++ ) {
+				var pageObj = {
+						"pageNo":i
+				}
+				jsonPage.push(pageObj);
+			}
+			
+			
+			$.each(jsonPage, function(i, item) {
+				var html = pageNoTemplate(item);
+				pageDataString += html;
+			});
+			
+			//console.log(pageDataString);
+			$("#pageNo").html(pageDataString)
+			
+			reloadAuthorList();
+		});
+	}
 	
 	function reloadAuthorList() {
+		if (currentPage > Math.ceil(currentCount/10)) {
+			currentPage--;
+		}
+		else if (currentPage < Math.ceil(currentCount/10)) {
+			currentPage = Math.ceil(currentCount/10);
+		}
+		console.log("current"+currentPage);
+		
 		var source = $("#entry-template").html();
 		var template = Handlebars.compile(source);
 
@@ -294,8 +334,10 @@ th{
 				dataString += html;
 			});
 			$("#authorsData").html(dataString);
-		});	
+		});		
 	}
+	
+	
 	
 	function addAuthor() {		
 		var name = $('#newName').val();
@@ -306,7 +348,7 @@ th{
 			url : "addAuthor",
 			data : {newAuthorName:name}
 		}).done(function(data) {
-			reloadAuthorList();
+			pagination();
 		});
 	}
 	

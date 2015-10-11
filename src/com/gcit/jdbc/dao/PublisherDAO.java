@@ -24,6 +24,10 @@ public class PublisherDAO extends BaseDAO {
 		save("delete from tbl_publisher where publisherId = ?",
 				new Object[] { auth.getPublisherId() });
 	}
+	
+	public int readPublisherCount() throws SQLException {
+		return readCount("select count(*) from tbl_publisher");
+	}
 
 	@SuppressWarnings("unchecked")
 	public Publisher readOne(int publisherId) throws SQLException {

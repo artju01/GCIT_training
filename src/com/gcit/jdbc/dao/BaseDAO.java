@@ -97,13 +97,8 @@ public abstract class BaseDAO {
 	
 	protected String setPageLimits(String query) {
 		StringBuilder sb = new StringBuilder(query);
-		System.out.println("page numbeer :"+pageNo);
-		if (pageNo == 1) {
-			sb.append("  LIMIT " + (pageNo - 1)*pageSize + "," + pageSize*pageNo);
-		}
-		else {
-			sb.append("  LIMIT " + (((pageNo - 1)*pageSize)+1) + "," + pageSize*pageNo);
-		}
+		
+		sb.append("  LIMIT " + (pageNo - 1)*pageSize + "," + pageSize*pageNo);
 		
 		return sb.toString();
 	}

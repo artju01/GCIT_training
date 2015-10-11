@@ -28,7 +28,7 @@ import com.gcit.jdbc.service.AdministratorService;
  */
 @WebServlet({"/countAuthors","/searchAuthorsWithIndex","/searchAuthors","/listAuthors","/listAuthorsWithPage","/addAuthor","/deleteAuthor","/editAuthor",
 	"/addBorrower","/deleteBorrower","/editBorrower",
-	"/addBranch","/deleteBranch","/editBranch",
+	"/addBranch","/deleteBranch","/editBranch","/listBranches","/listBranchesWithPage","/countBranches","/searchBranchesWithIndex",
 	"/addBook", "/deleteBook"})
 public class AdminServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
@@ -183,10 +183,6 @@ public class AdminServlet extends HttpServlet {
 			try {
 			Author author = new Author();
 			
-			//ObjectMapper mapper = new ObjectMapper();
-			//System.out.println(request.getInputStream());
-			//author = mapper.readValue(request.getInputStream() , Author.class);
-			
 			Map<String, String[]> map = request.getParameterMap();
 	        for(Entry<String,String[]> entry:map.entrySet()){
 	        	if (entry.getKey().equals("authorId")) {	
@@ -254,6 +250,39 @@ public class AdminServlet extends HttpServlet {
 			view = "/listBorrowers.jsp";
 			break;
 		}
+		
+		case "/listBranches": {
+			try {
+				String pageNo = request.getParameter("pageNo");
+				if(pageNo == null) 
+					pageNo = "1";
+				List<Branch> branches = new AdministratorService().getAllBranches(Integer.parseInt(pageNo));
+				ObjectMapper mapper = new ObjectMapper();
+				mapper.writeValue(response.getOutputStream(), branches);
+			} catch (Exception e) {
+				e.printStackTrace();
+				message = "Authors get failed. Reason: " + e.getMessage();
+				response.getWriter().write(message);
+			}
+			break;
+		}
+		
+		case "/listBranchesWithPage": {
+			try {
+				String pageNo = request.getParameter("pageNo");
+				if(pageNo == null) 
+					pageNo = "1";
+				List<Branch> branches = new AdministratorService().getAllBranches(Integer.parseInt(pageNo));
+				ObjectMapper mapper = new ObjectMapper();
+				mapper.writeValue(response.getOutputStream(), branches);
+			} catch (Exception e) {
+				e.printStackTrace();
+				message = "Authors get failed. Reason: " + e.getMessage();
+				response.getWriter().write(message);
+			}
+			break;
+		}
+		
 		case "/addBranch": {
 			String branchName = request.getParameter("branchName");
 			String branchAddress = request.getParameter("branchAddress");
@@ -270,7 +299,7 @@ public class AdminServlet extends HttpServlet {
 				message = null;
 				error = "Branch adde failed. Reason: " + e.getMessage();
 			}
-			view = "/listBranches.jsp";
+			//view = "/listBranches.jsp";
 			break;
 		}
 		case "/deleteBranch": {
@@ -287,14 +316,56 @@ public class AdminServlet extends HttpServlet {
 				message = null;
 				error = "Branch delete failed. Reason: " + e.getMessage();
 			}
-			view = "/listBranches.jsp";
+			//view = "/listBranches.jsp";
 			break;
 		}
 		case "/editBranch": {
-			//TODO need to implement
-			view = "/listBranches.jsp";
+			String branchId = request.getParameter("branchId");
+			Branch branch = new Branch();
+			branch.setBranchId(Integer.parseInt(branchId));
+			branch.setName(request.getParameter("branchName"));
+			branch.setAddress(request.getParameter("branchAddress"));
+			
+			try {
+				new AdministratorService().updateBranch(branch);
+				error = null;
+				message = "Branch edit succesfully";
+			} catch (Exception e) {
+				e.printStackTrace();
+				message = null;
+				error = "Branch edit failed. Reason: " + e.getMessage();
+			}
+			//view = "/listBranches.jsp";
+			break;		
+		}
+		
+		case "/countBranches": {
+			try {
+				int count = new AdministratorService().getBranchCount();
+				ObjectMapper mapper = new ObjectMapper();
+				mapper.writeValue(response.getOutputStream(), count);
+			} catch (Exception e) {
+				e.printStackTrace();
+				message = "Authors get failed. Reason: " + e.getMessage();
+				response.getWriter().write(message);
+			}
 			break;
 		}
+		
+		case "/searchBranchesWithIndex": {
+			try {
+				List<Branch> branches = new AdministratorService().searchBranchesWithPage(request.getParameter("searchText"),
+						Integer.parseInt(request.getParameter("page")));
+				ObjectMapper mapper = new ObjectMapper();
+				mapper.writeValue(response.getOutputStream(), branches);
+			} catch (Exception e) {
+				e.printStackTrace();
+				message = "Authors get failed. Reason: " + e.getMessage();
+				response.getWriter().write(message);
+			}
+			break;
+		}
+		
 		case "/addBook": {
 			//TODO need to implement
 			String bookName = request.getParameter("bookName");

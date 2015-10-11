@@ -133,6 +133,10 @@ public class AdministratorService {
 		}	
 	}
 
+	public int getBookCount() throws SQLException {
+		return bookDAO.readBookCount();
+	}
+	
 	public List<Author> getAllAuthors(int pageNo) throws SQLException {
 		if(pageNo <= 0)
 			pageNo = 1;
@@ -224,8 +228,18 @@ public class AdministratorService {
 		}
 	}
 	
-	public List<Branch> getAllBranches() throws SQLException {
-		return branchDAO.readAll();
+	public int getPublisherCount() throws SQLException {
+		return pubDAO.readPublisherCount();
+	}
+	
+	public List<Branch> getAllBranches(int pageNo) throws SQLException {
+		if(pageNo <= 0)
+			pageNo = 1;
+		
+		branchDAO.setPageNo(pageNo);
+		List<Branch> branches = branchDAO.readAll();
+		
+		return branches;
 	}
 	
 	public void addBranch(Branch branch) throws SQLException {
@@ -254,6 +268,17 @@ public class AdministratorService {
 			System.out.println(e);
 		}
 	}
+	
+	public int getBranchCount() throws SQLException {
+		return branchDAO.readBranchCount();
+	}	
+	
+	public List<Branch> searchBranchesWithPage(String searchText, int pageNo) throws SQLException {
+		BranchDAO bd = new BranchDAO();
+		List<Branch> branches = bd.readAllByNameWithPage(searchText,pageNo);
+		return branches;
+	}
+	
 	
 	public List<Borrower> getAllBorrower() throws SQLException {
 		return borrowDAO.readAll();
@@ -286,6 +311,10 @@ public class AdministratorService {
 		}
 	}
 	
+	public int getBorrowerCount() throws SQLException {
+		return borrowDAO.readBorrowerCount();
+	}
+	
 	public void updateBookLoans(BookLoans loan) throws SQLException {
 		try {
 			bookLoansDAO.update(loan);
@@ -295,8 +324,15 @@ public class AdministratorService {
 		}
 	}
 	
+	public int getBookLoansCount() throws SQLException {
+		return bookLoansDAO.readBookLoansCount();
+	}
+	
 	public List<Genre> getAllGenres() throws SQLException {
 		return genreDAO.readAll();
 	}
 
+	public int getGenreCount() throws SQLException {
+		return genreDAO.readGenreCount();
+	}
 }

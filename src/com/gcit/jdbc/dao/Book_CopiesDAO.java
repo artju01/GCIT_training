@@ -76,6 +76,9 @@ public class Book_CopiesDAO extends BaseDAO{
 				new Object[] { branch.getBranchId() });
 	}
 	
+	public int readBookCopiesCount() throws SQLException {
+		return readCount("select count(*) from tbl_book_copies");
+	}
 	
 	@Override
 	protected List<BookCopies> convertResult(ResultSet rs) throws SQLException {

@@ -39,6 +39,10 @@ public class BorrowerDAO extends BaseDAO {
 				new Object[] { borrow.getCardNo()});
 	}
 
+	public int readBorrowerCount() throws SQLException {
+		return readCount("select count(*) from tbl_borrower");
+	}
+	
 	@SuppressWarnings("unchecked")
 	public Borrower readOne(int cardNo) throws SQLException {
 		List<Borrower> borrows = (List<Borrower>) read("select * from tbl_borrower where cardNo = ?"
