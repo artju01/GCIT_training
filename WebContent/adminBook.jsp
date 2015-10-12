@@ -241,7 +241,7 @@
 						value=&rarr;
 						onclick="selectMove('availableAuthorsEdit','selectedAuthorsEdit');" /> <input
 						type="button" id="btRemove" class="btn btn-primary" value=&larr;
-						onclick="selectRemove('selectedAuthors');" />
+						onclick="selectRemove('selectedAuthorsEdit');" />
 				</div>
 				<select id=selectedAuthorsEdit multiple style="width: 150px">
 				</select>
@@ -267,7 +267,7 @@
 						value=&rarr;
 						onclick="selectMove('availableGenresEdit','selectedGenresEdit');" /> <input
 						type="button" id="btRemove" class="btn btn-primary" value=&larr;
-						onclick="selectRemove('selectedGenres');" />
+						onclick="selectRemove('selectedGenresEdit');" />
 				</div>
 				<select id=selectedGenresEdit multiple style="width: 150px">
 				</select>
@@ -403,17 +403,13 @@
 		searchGenres();
 	}
 	
-	function launchEditModal2(){
-		console.log("editBook2");
-	}
-	
 	function launchEditModal(bookId, bookName) {
 		$('#editModal').modal();
 		
 		//reset data
 		$('#editedBookId').val(bookId);
-		console.log(bookName);
 		$('#editedBookName').val(bookName);
+		$('#selectedAuthorsEdit').empty();
 
 		searchAuthors();
 		searchPublishers();
@@ -654,7 +650,7 @@
 		$.ajax({
 			  method: "POST",
 			  url: "addBook",
-			  data: {
+			  data: {			
 				  		bookName:bookName,
 						authors:authorsList,
 						publisher:pub,
@@ -668,6 +664,8 @@
 	}
 	
 	function editBook() {
+		$('#editModal').modal('hide');
+		var bookId = $('#editedBookId').val();
 		var bookName = $('#editedBookName').val();
 		var pub = $("#availablePublishersEdit").val();
 		
@@ -686,6 +684,7 @@
 			  method: "POST",
 			  url: "editBook",
 			  data: {
+				  		bookId:bookId,
 				  		bookName:bookName,
 						authors:authorsList,
 						publisher:pub,

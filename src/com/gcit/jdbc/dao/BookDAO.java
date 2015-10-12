@@ -48,26 +48,33 @@ public class BookDAO extends BaseDAO {
 	}
 
 	public void update(Book book) throws SQLException {
+		
 		if (book.getPublisher() != null) {
 			save("update tbl_book  set title = ?, pubId = ? where bookId = ?",
 					new Object[] { book.getTitle(), book.getPublisher().getPublisherId(), book.getBookId() });
 		}
 		
 		save("delete from tbl_book_authors where bookId = ?",
-				new Object[] { book.getBookId() });
-		for (Author auth : book.getAuthors()) {
-			save("insert into tbl_book_authors (bookId, authorId) values (?,?)",
-				new Object[] { book.getBookId(), auth.getAuthorId() });
+					new Object[] { book.getBookId() });
+		if (book.getAuthors() != null) {
+			for (Author auth : book.getAuthors()) {
+				save("insert into tbl_book_authors (bookId, authorId) values (?,?)",
+						new Object[] { book.getBookId(), auth.getAuthorId() });
+			}
 		}
 
+		
 		save("delete from tbl_book_genres where bookId = ?",
 				new Object[] { book.getBookId() });
-		for (Genre genre : book.getGenres()) {
-			save("insert into tbl_book_genres (bookId, genre_id) values (?,?)",
-					new Object[] { book.getBookId(), genre.getGenreId() });
+		if (book.getGenres() != null) {
+			for (Genre genre : book.getGenres()) {
+				save("insert into tbl_book_genres (bookId, genre_id) values (?,?)",
+						new Object[] { book.getBookId(), genre.getGenreId() });
+			}
 		}
 		
 		
+		/*
 		save("delete from tbl_book_copies where bookId = ?",
 				new Object[] { book.getBookId() });
 		for (BookCopies copy : book.getCopies()) {
@@ -87,7 +94,9 @@ public class BookDAO extends BaseDAO {
 								loan.getBorrower().getCardNo(), loan.getDateOut(), loan.getDueDate(), 
 								loan.getDateIn() });
 			}
-		}
+		}*/
+		
+		
 	}
 
 	public void delete(Book book) throws SQLException {

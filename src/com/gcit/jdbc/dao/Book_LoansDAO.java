@@ -9,8 +9,6 @@ import com.gcit.jdbc.entity.Book;
 import com.gcit.jdbc.entity.BookLoans;
 import com.gcit.jdbc.entity.Borrower;
 
-
-
 public class Book_LoansDAO extends BaseDAO {
 
 	
@@ -33,6 +31,19 @@ public class Book_LoansDAO extends BaseDAO {
 							loan.getBorrower().getCardNo()});
 		}
 	}
+	
+	public void updateDueDate(BookLoans loan) throws SQLException {
+		if (loan.getBorrower() != null && loan.getBranch() != null && loan.getBook() != null) {
+			save("update tbl_book_loans set bookId = ?, branchId = ?, cardNo = ?, dueDate = ?"
+					+ "where bookId = ? and branchId = ? and cardNo = ?",
+					new Object[] { loan.getBook().getBookId(), loan.getBranch().getBranchId(), 
+							loan.getBorrower().getCardNo(), loan.getDueDate(),
+							loan.getBook().getBookId(), loan.getBranch().getBranchId(),
+							loan.getBorrower().getCardNo()});
+		}
+	}
+	
+	
 
 	public void delete(BookLoans loan) throws SQLException {
 		if (loan.getBorrower() != null && loan.getBranch() != null && loan.getBook() != null) {
@@ -59,9 +70,14 @@ public class Book_LoansDAO extends BaseDAO {
 
 	@SuppressWarnings("unchecked")
 	public List<BookLoans> readAll() throws SQLException {
-		List<BookLoans> read = (List<BookLoans>) read("select * from tbl_book_loans", null);
-		return read;
+		return (List<BookLoans>) read(setPageLimits("select * from tbl_book_loans"), null);
 	}
+	
+	@SuppressWarnings("unchecked")
+	public List<BookLoans> readAllUnreturn() throws SQLException {
+		return (List<BookLoans>) read(setPageLimits("select * from tbl_book_loans where dateIn is null"), null);
+	}
+	
 	
 	@SuppressWarnings("unchecked")
 	public List<BookLoans> readAllByBook(Book bk) throws SQLException {

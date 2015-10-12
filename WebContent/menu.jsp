@@ -47,6 +47,7 @@
                                 <li><a href="adminBranch.jsp">Branch</a></li>
                                 <li><a href="adminBorrower.jsp">Borrower</a></li>       
                                 <li><a href="adminPublisher.jsp">Publisher</a></li>
+                             	<li><a href="adminBookLoan.jsp">Book Loan</a></li>
                             </ul>
                         </li>                    
                         <li class="dropdown"><a href="blog.html">Librarian <i class="fa fa-angle-down"></i></a>

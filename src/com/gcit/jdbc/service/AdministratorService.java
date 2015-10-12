@@ -79,10 +79,25 @@ public class AdministratorService {
 	}
 	
 	
-	public List<BookLoans> getAllBookLoans() throws SQLException {
-		return bookLoansDAO.readAll();
+	public List<BookLoans> getAllBookLoans(int pageNo) throws SQLException {
+		if(pageNo <= 0)
+			pageNo = 1;
+		bookLoansDAO.setPageNo(pageNo);
+		List<BookLoans> bookLoans = bookLoansDAO.readAll();
+		return bookLoans;
 	}
 	
+	public List<BookLoans> getAllUnreturnBookLoans(int pageNo) throws SQLException {
+		if(pageNo <= 0)
+			pageNo = 1;
+		bookLoansDAO.setPageNo(pageNo);
+		List<BookLoans> bookLoans = bookLoansDAO.readAllUnreturn();
+		return bookLoans;
+	}
+	
+	public void updateBookLoansDueDate(BookLoans bookloan) throws SQLException {
+		bookLoansDAO.updateDueDate(bookloan);
+	}
 	
 	public void addBook(Book bk) throws SQLException {
 		/*List<Book>books = bookDAO.readAll();

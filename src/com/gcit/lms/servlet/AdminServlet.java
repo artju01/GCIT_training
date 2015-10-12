@@ -1,8 +1,13 @@
 package com.gcit.lms.servlet;
 
 import java.io.IOException;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Map.Entry;
 
@@ -15,6 +20,7 @@ import javax.servlet.http.HttpServletResponse;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.gcit.jdbc.entity.Author;
 import com.gcit.jdbc.entity.Book;
+import com.gcit.jdbc.entity.BookLoans;
 import com.gcit.jdbc.entity.Borrower;
 import com.gcit.jdbc.entity.Branch;
 import com.gcit.jdbc.entity.Genre;
@@ -29,6 +35,7 @@ import com.gcit.jdbc.service.AdministratorService;
 	"/addBranch","/deleteBranch","/editBranch","/listBranches","/listBranchesWithPage","/countBranches","/searchBranchesWithIndex",
 	"/addBook", "/deleteBook","/editBook","/listBooks","/countBooks","/searchBooksWithIndex",
 	"/addPublisher","/deletePublisher","/editPublisher","/listPublishers","/countPublishers","/searchPublishers","/searchPublishersWithIndex",
+	"/editBookLoans","/listBookLoans","/countBookLoans",
 	"/searchGenres"})
 public class AdminServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
@@ -469,6 +476,7 @@ public class AdminServlet extends HttpServlet {
 		}
 		
 		case "/editBook": {
+			String bookId = request.getParameter("bookId");
 			String bookName = request.getParameter("bookName");
 			String pubId = request.getParameter("publisher");
 			String[] authorId = request.getParameterValues("authors[]");
@@ -495,6 +503,7 @@ public class AdminServlet extends HttpServlet {
 			}
 			
 			Book bk = new Book(); 
+			bk.setBookId(Integer.parseInt(bookId));
 			bk.setTitle(bookName);
 			bk.setPublisher(pub);
 			bk.setAuthors(authors);
@@ -686,6 +695,75 @@ public class AdminServlet extends HttpServlet {
 			} catch (Exception e) {
 				e.printStackTrace();
 				message = "Publishers search failed. Reason: " + e.getMessage();
+				response.getWriter().write(message);
+			}
+			break;
+		}
+
+//		dueDate:dueDate
+		case "/editBookLoans": {
+			String bookId = request.getParameter("bookId");
+			String branchId = request.getParameter("branchId");
+			String cardNo = request.getParameter("cardNo");
+			String dueDateStr = request.getParameter("dueDate");
+			
+			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+			Date dueDate = null;
+			try {
+				dueDate = sdf.parse(dueDateStr);
+			} catch (ParseException e1) {				
+				e1.printStackTrace();
+			}
+		
+			
+			BookLoans bl = new BookLoans();
+			Book bk = new Book();
+			bk.setBookId(Integer.parseInt(bookId));
+			bl.setBook(bk); 
+			Branch br = new Branch();
+			br.setBranchId(Integer.parseInt(branchId));
+			bl.setBranch(br); 
+			Borrower bor = new Borrower();
+			bor.setCardNo(Integer.parseInt(cardNo));
+			bl.setBorrower(bor);
+			bl.setDueDate(dueDate);
+			
+			try {
+				new AdministratorService().updateBookLoansDueDate(bl);
+				error = null;
+				message = "Overirde dueDate succesfully";
+			} catch (Exception e) {
+				e.printStackTrace();
+				message = null;
+				error = "Overirde dueDate failed. Reason: " + e.getMessage();
+			}
+			break;	
+		}
+		
+		case "/listBookLoans": {
+			try {
+				String pageNo = request.getParameter("pageNo");
+				if(pageNo == null) 
+					pageNo = "1";
+				List<BookLoans> bookLoans = new AdministratorService().getAllBookLoans(Integer.parseInt(pageNo));
+				ObjectMapper mapper = new ObjectMapper();
+				mapper.writeValue(response.getOutputStream(), bookLoans);
+			} catch (Exception e) {
+				e.printStackTrace();
+				message = "BookLoans get failed. Reason: " + e.getMessage();
+				response.getWriter().write(message);
+			}
+			break;
+		}
+		
+		case "/countBookLoans": {
+			try {
+				int count = new AdministratorService().getBookLoansCount();
+				ObjectMapper mapper = new ObjectMapper();
+				mapper.writeValue(response.getOutputStream(), count);
+			} catch (Exception e) {
+				e.printStackTrace();
+				message = "BookLoans count get failed. Reason: " + e.getMessage();
 				response.getWriter().write(message);
 			}
 			break;
