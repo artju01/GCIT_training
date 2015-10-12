@@ -90,6 +90,8 @@ public class BranchDAO extends  BaseDAO{
 			branches.add(branch);
 		}
 		
+		conn.close();
+		
 		return branches;
 	}	
 

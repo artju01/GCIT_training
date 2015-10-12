@@ -1,13 +1,11 @@
 package com.gcit.lms.servlet;
 
 import java.io.IOException;
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -29,7 +27,9 @@ import com.gcit.jdbc.service.AdministratorService;
 @WebServlet({"/countAuthors","/searchAuthorsWithIndex","/searchAuthors","/listAuthors","/listAuthorsWithPage","/addAuthor","/deleteAuthor","/editAuthor",
 	"/addBorrower","/deleteBorrower","/editBorrower","/listBorrowers","/countBorrowers","/searchBorrowersWithIndex",
 	"/addBranch","/deleteBranch","/editBranch","/listBranches","/listBranchesWithPage","/countBranches","/searchBranchesWithIndex",
-	"/addBook", "/deleteBook"})
+	"/addBook", "/deleteBook","/editBook","/listBooks","/countBooks","/searchBooksWithIndex",
+	"/addPublisher","/deletePublisher","/editPublisher","/listPublishers","/countPublishers","/searchPublishers","/searchPublishersWithIndex",
+	"/searchGenres"})
 public class AdminServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	/**
@@ -425,14 +425,16 @@ public class AdminServlet extends HttpServlet {
 		}
 		
 		case "/addBook": {
-			//TODO need to implement
 			String bookName = request.getParameter("bookName");
-			String pubId = request.getParameter("publisherId");
-			String[] authorId = request.getParameterValues("selectAuthor");
-			String[] genreId = request.getParameterValues("selectGen");
+			String pubId = request.getParameter("publisher");
+			String[] authorId = request.getParameterValues("authors[]");
+			String[] genreId = request.getParameterValues("genres[]");
 			
-			Publisher pub = new Publisher();
-			pub.setPublisherId(Integer.parseInt(pubId));
+			Publisher pub = null;
+			if (pubId != null) {
+				pub = new Publisher();
+				pub.setPublisherId(Integer.parseInt(pubId));
+			}
 			
 			List<Author> authors = new ArrayList<Author>();
 			for (int i=0; i<authorId.length; i++) {
@@ -453,9 +455,7 @@ public class AdminServlet extends HttpServlet {
 			bk.setPublisher(pub);
 			bk.setAuthors(authors);
 			bk.setGenres(gens);
-			
-			System.out.println("title="+bk.getTitle()+"pubId="+pub.getPublisherId());
-			
+						
 			try {
 				new AdministratorService().addBook(bk);
 			} catch (Exception e) {
@@ -464,14 +464,54 @@ public class AdminServlet extends HttpServlet {
 				error = "book add failed. Reason: " + e.getMessage();
 			}
 			
-			view = "/listBooks.jsp";
+			//view = "/listBooks.jsp";
 			break;
 		}
+		
 		case "/editBook": {
-			//TODO need to implement
-			view = "/listBranches.jsp";
+			String bookName = request.getParameter("bookName");
+			String pubId = request.getParameter("publisher");
+			String[] authorId = request.getParameterValues("authors[]");
+			String[] genreId = request.getParameterValues("genres[]");
+			
+			Publisher pub = null;
+			if (pubId != null) {
+				pub = new Publisher();
+				pub.setPublisherId(Integer.parseInt(pubId));
+			}
+			
+			List<Author> authors = new ArrayList<Author>();
+			for (int i=0; i<authorId.length; i++) {
+				Author auth = new Author();
+				auth.setAuthorId(Integer.parseInt(authorId[i]));
+				authors.add(auth);
+			}
+			
+			List<Genre> gens = new ArrayList<Genre>();
+			for (int i=0; i<genreId.length; i++) {
+				Genre gen = new Genre();
+				gen.setGenreId(Integer.parseInt(genreId[i]));
+				gens.add(gen);
+			}
+			
+			Book bk = new Book(); 
+			bk.setTitle(bookName);
+			bk.setPublisher(pub);
+			bk.setAuthors(authors);
+			bk.setGenres(gens);
+						
+			try {
+				new AdministratorService().updateBook(bk);
+			} catch (Exception e) {
+				e.printStackTrace();
+				message = null;
+				error = "book update failed. Reason: " + e.getMessage();
+			}
+			
+			//view = "/listBooks.jsp";
 			break;
 		}
+		
 		case "/deleteBook": {
 			String bookId = request.getParameter("bookId");
 			Book book = new Book();
@@ -486,20 +526,196 @@ public class AdminServlet extends HttpServlet {
 				message = null;
 				error = "Book delete failed. Reason: " + e.getMessage();
 			}
-			view = "/listBooks.jsp";
+			//view = "/listBooks.jsp";
 			break;
 		}
+		
+		case "/listBooks": {
+			try {
+				String pageNo = request.getParameter("pageNo");
+				if(pageNo == null) 
+					pageNo = "1";
+				List<Book> books = new AdministratorService().getAllBooks(Integer.parseInt(pageNo));
+				ObjectMapper mapper = new ObjectMapper();
+				mapper.writeValue(response.getOutputStream(), books);
+			} catch (Exception e) {
+				e.printStackTrace();
+				message = "Books get failed. Reason: " + e.getMessage();
+				response.getWriter().write(message);
+			}
+			break;
+		}
+		
+		case "/countBooks": {
+			try {
+				int count = new AdministratorService().getBookCount();
+				ObjectMapper mapper = new ObjectMapper();
+				mapper.writeValue(response.getOutputStream(), count);
+			} catch (Exception e) {
+				e.printStackTrace();
+				message = "Book count failed. Reason: " + e.getMessage();
+				response.getWriter().write(message);
+			}
+			break;
+		}
+		
+		case "/searchBooksWithIndex": {
+			try {
+				List<Book> books = new AdministratorService().searchBooksWithPage(request.getParameter("searchText"),
+						Integer.parseInt(request.getParameter("page")));
+				ObjectMapper mapper = new ObjectMapper();
+				mapper.writeValue(response.getOutputStream(), books);
+			} catch (Exception e) {
+				e.printStackTrace();
+				message = "Branch search failed. Reason: " + e.getMessage();
+				response.getWriter().write(message);
+			}
+			break;
+		}
+		
+		case "/addPublisher": {
+			String pubName = request.getParameter("name");
+			String pubAddress = request.getParameter("address");
+			String pubPhone = request.getParameter("phone");
+			Publisher pub = new Publisher();
+			pub.setPublisherName(pubName);
+			pub.setAddress(pubAddress);
+			pub.setPhone(pubPhone);
+			
+			try {
+				new AdministratorService().addPublisher(pub);
+				error = null;
+				message = "Publisher adde succesfully";
+			} catch (Exception e) {
+				e.printStackTrace();
+				message = null;
+				error = "Publisher added failed. Reason: " + e.getMessage();
+			}
+			//view = "/listBranches.jsp";
+			break;
+		}
+		
+		case "/deletePublisher": {
+			Publisher pub = new Publisher();
+			String pubId = request.getParameter("id");
+			pub.setPublisherId(Integer.parseInt(pubId));
+
+			try {
+				new AdministratorService().deletePublisher(pub);
+				error = null;
+				message = "Publisher deleted succesfully";
+			} catch (Exception e) {
+				e.printStackTrace();
+				message = null;
+				error = "Publisher delete failed. Reason: " + e.getMessage();
+			}
+			
+			//view = "/adminAuthor.jsp";
+			break;
+			
+		}
+		case "/editPublisher" : {
+			String pubId = request.getParameter("id");
+			Publisher pub = new Publisher();
+			pub.setPublisherId(Integer.parseInt(pubId));
+			pub.setPublisherName(request.getParameter("name"));
+			pub.setAddress(request.getParameter("address"));
+			pub.setPhone(request.getParameter("phone"));
+			
+			try {
+				new AdministratorService().updatePublisher(pub);
+				error = null;
+				message = "Publisher edit succesfully";
+			} catch (Exception e) {
+				e.printStackTrace();
+				message = null;
+				error = "Publisher edit failed. Reason: " + e.getMessage();
+			}
+			//view = "/listBranches.jsp";
+			break;	
+			
+		}
+		
+		case "/listPublishers": {
+			try {
+				String pageNo = request.getParameter("pageNo");
+				if(pageNo == null) 
+					pageNo = "1";
+				List<Publisher> pubs = new AdministratorService().getAllPublisher(Integer.parseInt(pageNo));
+				ObjectMapper mapper = new ObjectMapper();
+				mapper.writeValue(response.getOutputStream(), pubs);
+			} catch (Exception e) {
+				e.printStackTrace();
+				message = "Publishers get failed. Reason: " + e.getMessage();
+				response.getWriter().write(message);
+			}
+			break;
+		}
+		
+		case "/countPublishers": {
+			try {
+				int count = new AdministratorService().getPublisherCount();
+				ObjectMapper mapper = new ObjectMapper();
+				mapper.writeValue(response.getOutputStream(), count);
+			} catch (Exception e) {
+				e.printStackTrace();
+				message = "Publishers count get failed. Reason: " + e.getMessage();
+				response.getWriter().write(message);
+			}
+			break;
+		}
+		case "/searchPublishers": {
+			try {
+				List<Publisher> pubs = new AdministratorService().searchPublishers(request.getParameter("searchText"));
+				ObjectMapper mapper = new ObjectMapper();
+				mapper.writeValue(response.getOutputStream(), pubs);
+			} catch (Exception e) {
+				e.printStackTrace();
+				message = "Publishers get failed. Reason: " + e.getMessage();
+				response.getWriter().write(message);
+			}
+			break;
+		}
+		
+		case "/searchPublishersWithIndex": {
+			try {
+				List<Publisher> publishers = new AdministratorService().searchPublishersWithPage(request.getParameter("searchText"),
+						Integer.parseInt(request.getParameter("page")));
+				ObjectMapper mapper = new ObjectMapper();
+				mapper.writeValue(response.getOutputStream(), publishers);
+			} catch (Exception e) {
+				e.printStackTrace();
+				message = "Publishers search failed. Reason: " + e.getMessage();
+				response.getWriter().write(message);
+			}
+			break;
+		}
+		
+		case "/searchGenres": {
+			try {
+				List<Genre> gens = new AdministratorService().searchGenres(request.getParameter("searchText"));
+				ObjectMapper mapper = new ObjectMapper();
+				mapper.writeValue(response.getOutputStream(), gens);
+			} catch (Exception e) {
+				e.printStackTrace();
+				message = "Genres get failed. Reason: " + e.getMessage();
+				response.getWriter().write(message);
+			}
+			break;
+		}
+		
 		default:
 			break;
 		}
-
+//"/editBook","/listBooks","/countBooks","/searchBooksWithIndex"
 		//forward
+		/*
 		if (view != null) {
 			request.setAttribute("message", message);
 			request.setAttribute("error", error);
 			RequestDispatcher rd = getServletContext().getRequestDispatcher(view);
 			rd.forward(request, response);
-		}
+		}*/
 		
 		//redirect
 		

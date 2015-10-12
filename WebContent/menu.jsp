@@ -46,7 +46,7 @@
                                 <li><a href="adminBook.jsp">Book</a></li>
                                 <li><a href="adminBranch.jsp">Branch</a></li>
                                 <li><a href="adminBorrower.jsp">Borrower</a></li>       
-                                <li><a href="coming-soon.html">Coming Soon</a></li>
+                                <li><a href="adminPublisher.jsp">Publisher</a></li>
                             </ul>
                         </li>                    
                         <li class="dropdown"><a href="blog.html">Librarian <i class="fa fa-angle-down"></i></a>

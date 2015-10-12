@@ -1,7 +1,6 @@
 package com.gcit.jdbc.service;
 
 import java.sql.SQLException;
-import java.util.HashSet;
 import java.util.List;
 
 import com.gcit.jdbc.dao.AuthorDAO;
@@ -51,7 +50,11 @@ public class AdministratorService {
 		return pubs;
 	}
 	
-	public List<Book> getAllBooks() throws SQLException {
+	public List<Book> getAllBooks(int pageNo) throws SQLException {
+		if(pageNo <= 0)
+			pageNo = 1;
+		
+		bookDAO.setPageNo(pageNo);
 		List<Book> books = bookDAO.readAll();
 	
 		for(Book b : books) {
@@ -82,7 +85,7 @@ public class AdministratorService {
 	
 	
 	public void addBook(Book bk) throws SQLException {
-		List<Book>books = bookDAO.readAll();
+		/*List<Book>books = bookDAO.readAll();
 		for (Book book : books) {
 			if (bk.getTitle() == book.getTitle()) {
 				List<Author> authors = authorDAO.readAllByBook(book);
@@ -103,7 +106,7 @@ public class AdministratorService {
 					return;
 				}
 			}
-		}
+		}*/
 		
 		//Add
 		try {
@@ -136,6 +139,18 @@ public class AdministratorService {
 	public int getBookCount() throws SQLException {
 		return bookDAO.readBookCount();
 	}
+	
+	public List<Book> searchBooksWithPage(String searchText, int pageNo) throws SQLException {
+		BookDAO  bd = new BookDAO();
+		List<Book> books = bd.readAllByNameWithPage(searchText,pageNo);
+		
+		for (Book bk:books) {
+			assignBookData(bk);
+		}
+		
+		return books;
+	}
+	
 	
 	public List<Author> getAllAuthors(int pageNo) throws SQLException {
 		if(pageNo <= 0)
@@ -230,6 +245,29 @@ public class AdministratorService {
 	
 	public int getPublisherCount() throws SQLException {
 		return pubDAO.readPublisherCount();
+	}
+	
+	public List<Publisher> getAllPublisher(int pageNo) throws SQLException {
+		if(pageNo <= 0)
+			pageNo = 1;
+		PublisherDAO pd = new PublisherDAO();
+		pd.setPageNo(pageNo);
+		List<Publisher> pubs = pd.readAll();
+		
+		return pubs;
+	}
+	
+	public List<Publisher> searchPublishers(String searchText) throws SQLException {
+		PublisherDAO pd = new PublisherDAO();
+		List<Publisher> pubs = pd.readAllByName(searchText);
+
+		return pubs;
+	}
+	
+	public List<Publisher> searchPublishersWithPage(String searchText, int pageNo) throws SQLException {
+		PublisherDAO  pd = new PublisherDAO();
+		List<Publisher> pubs = pd.readAllByNameWithPage(searchText,pageNo);
+		return pubs;
 	}
 	
 	public List<Branch> getAllBranches(int pageNo) throws SQLException {
@@ -345,5 +383,12 @@ public class AdministratorService {
 
 	public int getGenreCount() throws SQLException {
 		return genreDAO.readGenreCount();
+	}
+	
+	public List<Genre> searchGenres(String searchText) throws SQLException {
+		GenreDAO gd = new GenreDAO();
+		List<Genre> gens = gd.readAllByName(searchText);
+
+		return gens;
 	}
 }

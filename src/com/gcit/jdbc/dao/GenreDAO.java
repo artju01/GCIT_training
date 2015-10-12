@@ -57,6 +57,12 @@ public class GenreDAO extends BaseDAO{
 				new Object[] {book.getBookId()});
 		return gens;
 	}
+	
+	@SuppressWarnings("unchecked")
+	public List<Genre> readAllByName(String genreName) throws SQLException {
+		String searchText = '%'+genreName+'%';
+		return (List<Genre>) read("select * from tbl_genre where genre_name like ?", new Object[] { searchText });
+	}
 
 	@Override
 	protected List<Genre> convertResult(ResultSet rs) throws SQLException {
@@ -67,6 +73,9 @@ public class GenreDAO extends BaseDAO{
 			gen.setGenreName(rs.getString("genre_name"));
 			gens.add(gen);
 		}
+		
+		conn.close();
+		
 		return gens;
 	}
 

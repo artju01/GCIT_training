@@ -101,6 +101,8 @@ public class Book_LoansDAO extends BaseDAO {
 			bookLoans.add(loan);
 		}
 		
+		conn.close();
+		
 		return bookLoans;
 	}
 

@@ -94,7 +94,9 @@ public class AuthorDAO extends BaseDAO {
 			auth.setAuthorName(rs.getString("authorName"));
 			authors.add(auth);
 		}
-
+		
+		conn.close();
+		
 		return authors;
 	}
 

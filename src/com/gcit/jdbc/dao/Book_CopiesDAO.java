@@ -93,6 +93,8 @@ public class Book_CopiesDAO extends BaseDAO{
 			copies.add(copy);
 		}
 		
+		conn.close();
+		
 		return copies;
 	}
 

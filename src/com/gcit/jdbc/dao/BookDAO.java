@@ -57,13 +57,13 @@ public class BookDAO extends BaseDAO {
 				new Object[] { book.getBookId() });
 		for (Author auth : book.getAuthors()) {
 			save("insert into tbl_book_authors (bookId, authorId) values (?,?)",
-					new Object[] { book.getBookId(), auth.getAuthorId() });
+				new Object[] { book.getBookId(), auth.getAuthorId() });
 		}
 
 		save("delete from tbl_book_genres where bookId = ?",
 				new Object[] { book.getBookId() });
 		for (Genre genre : book.getGenres()) {
-			save("insert into tbl_book_genres (bookId, genreId) values (?,?)",
+			save("insert into tbl_book_genres (bookId, genre_id) values (?,?)",
 					new Object[] { book.getBookId(), genre.getGenreId() });
 		}
 		
@@ -125,8 +125,7 @@ public class BookDAO extends BaseDAO {
 
 	@SuppressWarnings("unchecked")
 	public List<Book> readAll() throws SQLException {
-		 List<Book> read = (List<Book>) read("select * from tbl_book", null);
-			return read;
+			return (List<Book>) read(setPageLimits("select * from tbl_book"), null);
 	}
 	 
 	@SuppressWarnings("unchecked")
@@ -147,6 +146,15 @@ public class BookDAO extends BaseDAO {
 		return (List<Book>) read("select * from tbl_book where bookId = in (select bookId from tbl_book_genres where genre_id = ?)",
 					new Object[] { gen.getGenreId() });
 	}
+	
+	@SuppressWarnings("unchecked")
+	public List<Book> readAllByNameWithPage(String branchName, int pageNo) throws SQLException {
+		String searchText = '%'+branchName+'%';
+		this.setPageNo(pageNo);
+		String query = setPageLimits("select * from tbl_book");
+		query = "select * from ("+query+") as t1 where title like ?";
+		return (List<Book>) read(query, new Object[] { searchText });
+	}
 
 	@Override
 	protected List<Book> convertResult(ResultSet rs) throws SQLException {
@@ -157,6 +165,8 @@ public class BookDAO extends BaseDAO {
 			book.setTitle(rs.getString("title"));
 			books.add(book);
 		}
+		
+		conn.close();
 		
 		return books;
 	}

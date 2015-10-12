@@ -9,8 +9,9 @@ import java.sql.Statement;
 
 
 public abstract class BaseDAO {
-
+	
 	protected abstract Object convertResult(ResultSet rs) throws SQLException;
+	protected Connection conn;
 	
 	public int getPageNo() {
 		return pageNo;
@@ -30,14 +31,15 @@ public abstract class BaseDAO {
 			e.printStackTrace();
 		}
 		
-		Connection conn = DriverManager.getConnection(
+		conn = DriverManager.getConnection(
 				"jdbc:mysql://localhost:3306/library", 
 				"root", "");
 		return conn;
 	}
 	
 	protected int saveWithId(String query, Object[] values) throws SQLException {
-		PreparedStatement stmt = getConnection().prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
+		conn = getConnection();
+		PreparedStatement stmt = conn.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
 		
 		int count = 1;
 		for(Object obj : values) {
@@ -48,14 +50,19 @@ public abstract class BaseDAO {
 		
 		ResultSet rs = stmt.getGeneratedKeys();
 		
-		if(rs.next())
-			return rs.getInt(1);
+		if(rs.next()) {
+			int result = rs.getInt(1);
+			conn.close();
+			return result;
+		}
 		else 
+			conn.close();
 			return -1;
 	}
 
 	protected void save(String query, Object[] values) throws SQLException {
-		PreparedStatement stmt = getConnection().prepareStatement(query);
+		conn = getConnection();
+		PreparedStatement stmt = conn.prepareStatement(query);
 		
 		int count = 1;
 		for(Object obj : values) {
@@ -64,10 +71,13 @@ public abstract class BaseDAO {
 		}
 		
 		stmt.executeUpdate();
+		
+		conn.close();
 	}
 	
 	protected Object read(String query, Object[] values) throws SQLException {
-		PreparedStatement stmt = getConnection().prepareStatement(query);
+		conn = getConnection();
+		PreparedStatement stmt = conn.prepareStatement(query);
 
 		if(values != null) {
 			int count = 1;
@@ -78,20 +88,22 @@ public abstract class BaseDAO {
 		}
 		
 		ResultSet rs = stmt.executeQuery();
-
+		//conn.close();
+		
 		return this.convertResult(rs);
 
 	}
 	
 	protected int readCount(String query) throws SQLException {
-		PreparedStatement stmt = getConnection().prepareStatement(query);
+		conn = getConnection();
+		PreparedStatement stmt = conn.prepareStatement(query);
 		
 		ResultSet rs = stmt.executeQuery();
 		int count = 0;
 		while (rs.next()) {
 			count = rs.getInt("count(*)");
 		}
-		
+		conn.close();
 		return count;
 	}
 	

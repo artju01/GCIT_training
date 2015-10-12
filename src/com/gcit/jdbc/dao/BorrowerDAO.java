@@ -8,7 +8,6 @@ import java.util.List;
 import com.gcit.jdbc.entity.Book;
 import com.gcit.jdbc.entity.BookLoans;
 import com.gcit.jdbc.entity.Borrower;
-import com.gcit.jdbc.entity.Branch;
 
 public class BorrowerDAO extends BaseDAO {
 
@@ -88,6 +87,8 @@ public class BorrowerDAO extends BaseDAO {
 			borrow.setPhone(rs.getString("phone"));
 			borrows.add(borrow);
 		}
+		
+		conn.close();
 		
 		return borrows;
 	}
