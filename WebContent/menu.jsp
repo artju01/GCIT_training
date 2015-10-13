@@ -52,7 +52,7 @@
                         </li>                    
                         <li class="dropdown"><a href="blog.html">Librarian <i class="fa fa-angle-down"></i></a>
                             <ul role="menu" class="sub-menu">
-                                <li><a href="blog.html">Branch</a></li>
+                                <li><a href="librarianBranch.jsp">Branch</a></li>
                                 <li><a href="blogtwo.html">Book</a></li>   
                             </ul>
                         </li>
@@ -83,6 +83,11 @@
 <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
 <script src="./scripts/ie10-viewport-bug-workaround.js"></script>
 <script src="./scripts/handlebars-v4.0.2.js"></script>
+
+<!-- DatePicker -->
+<script src="./js/bootstrap-formhelpers.js"></script>
+<link href="css/bootstrap-formhelpers.css" rel="stylesheet">
+<link href="css/bootstrap-formhelpers.min.css" rel="stylesheet">
 
 </html>
 

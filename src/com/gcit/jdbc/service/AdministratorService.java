@@ -79,26 +79,6 @@ public class AdministratorService {
 	}
 	
 	
-	public List<BookLoans> getAllBookLoans(int pageNo) throws SQLException {
-		if(pageNo <= 0)
-			pageNo = 1;
-		bookLoansDAO.setPageNo(pageNo);
-		List<BookLoans> bookLoans = bookLoansDAO.readAll();
-		return bookLoans;
-	}
-	
-	public List<BookLoans> getAllUnreturnBookLoans(int pageNo) throws SQLException {
-		if(pageNo <= 0)
-			pageNo = 1;
-		bookLoansDAO.setPageNo(pageNo);
-		List<BookLoans> bookLoans = bookLoansDAO.readAllUnreturn();
-		return bookLoans;
-	}
-	
-	public void updateBookLoansDueDate(BookLoans bookloan) throws SQLException {
-		bookLoansDAO.updateDueDate(bookloan);
-	}
-	
 	public void addBook(Book bk) throws SQLException {
 		/*List<Book>books = bookDAO.readAll();
 		for (Book book : books) {
@@ -372,6 +352,13 @@ public class AdministratorService {
 	public int getBorrowerCount() throws SQLException {
 		return borrowDAO.readBorrowerCount();
 	}
+
+	
+	public List<Borrower> searchBorrowersWithPage(String searchText, int pageNo) throws SQLException {
+		BorrowerDAO  bd = new BorrowerDAO();
+		List<Borrower> borrowers = bd.readAllByNameWithPage(searchText,pageNo);
+		return borrowers;
+	}
 	
 	public void updateBookLoans(BookLoans loan) throws SQLException {
 		try {
@@ -382,14 +369,28 @@ public class AdministratorService {
 		}
 	}
 	
-	public List<Borrower> searchBorrowersWithPage(String searchText, int pageNo) throws SQLException {
-		BorrowerDAO  bd = new BorrowerDAO();
-		List<Borrower> borrowers = bd.readAllByNameWithPage(searchText,pageNo);
-		return borrowers;
+	public int getUnreturnBookLoansCount() throws SQLException {
+		return bookLoansDAO.readUnreturnBookLoansCount();
 	}
 	
-	public int getBookLoansCount() throws SQLException {
-		return bookLoansDAO.readBookLoansCount();
+	public List<BookLoans> getAllBookLoans(int pageNo) throws SQLException {
+		if(pageNo <= 0)
+			pageNo = 1;
+		bookLoansDAO.setPageNo(pageNo);
+		List<BookLoans> bookLoans = bookLoansDAO.readAll();
+		return bookLoans;
+	}
+	
+	public List<BookLoans> getAllUnreturnBookLoans(int pageNo) throws SQLException {
+		if(pageNo <= 0)
+			pageNo = 1;
+		bookLoansDAO.setPageNo(pageNo);
+		List<BookLoans> bookLoans = bookLoansDAO.readAllUnreturn();
+		return bookLoans;
+	}
+	
+	public void updateBookLoansDueDate(BookLoans bookloan) throws SQLException {
+		bookLoansDAO.updateDueDate(bookloan);
 	}
 	
 	public List<Genre> getAllGenres() throws SQLException {

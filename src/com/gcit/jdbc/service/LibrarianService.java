@@ -46,6 +46,13 @@ public class LibrarianService {
 		}
 	}
 	
+	public List<BookCopies> getBookCopiesByBranch (int branchId) throws SQLException {
+		Branch br = new Branch();
+		br.setBranchId(branchId);
+		List<BookCopies> copies = bookCopiesDAO.readAllByBranch(br);
+		return copies;
+	}
+	
 	public List<Branch> getAllBranch() throws SQLException {
 		List<Branch> branches = branchDAO.readAll();
 		return branches;

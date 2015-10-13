@@ -36,7 +36,7 @@ import com.gcit.jdbc.service.AdministratorService;
 	"/addBook", "/deleteBook","/editBook","/listBooks","/countBooks","/searchBooksWithIndex",
 	"/addPublisher","/deletePublisher","/editPublisher","/listPublishers","/countPublishers","/searchPublishers","/searchPublishersWithIndex",
 	"/editBookLoans","/listBookLoans","/countBookLoans",
-	"/searchGenres"})
+	"/searchGenres",})
 public class AdminServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	/**
@@ -745,7 +745,7 @@ public class AdminServlet extends HttpServlet {
 				String pageNo = request.getParameter("pageNo");
 				if(pageNo == null) 
 					pageNo = "1";
-				List<BookLoans> bookLoans = new AdministratorService().getAllBookLoans(Integer.parseInt(pageNo));
+				List<BookLoans> bookLoans = new AdministratorService().getAllUnreturnBookLoans(Integer.parseInt(pageNo));
 				ObjectMapper mapper = new ObjectMapper();
 				mapper.writeValue(response.getOutputStream(), bookLoans);
 			} catch (Exception e) {
@@ -758,7 +758,7 @@ public class AdminServlet extends HttpServlet {
 		
 		case "/countBookLoans": {
 			try {
-				int count = new AdministratorService().getBookLoansCount();
+				int count = new AdministratorService().getUnreturnBookLoansCount();
 				ObjectMapper mapper = new ObjectMapper();
 				mapper.writeValue(response.getOutputStream(), count);
 			} catch (Exception e) {
@@ -781,7 +781,7 @@ public class AdminServlet extends HttpServlet {
 			}
 			break;
 		}
-		
+			
 		default:
 			break;
 		}

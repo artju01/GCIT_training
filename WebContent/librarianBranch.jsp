@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="">
     <meta name="author" content="">
-    <title>Administrator | Book Loans</title>
+    <title>Administrator | Branch</title>
     <link href="css/bootstrap.min.css" rel="stylesheet">
     <link href="css/font-awesome.min.css" rel="stylesheet">
     <link href="css/lightbox.css" rel="stylesheet"> 
@@ -22,12 +22,12 @@
     <link rel="apple-touch-icon-precomposed" sizes="114x114" href="images/ico/apple-touch-icon-114-precomposed.png">
     <link rel="apple-touch-icon-precomposed" sizes="72x72" href="images/ico/apple-touch-icon-72-precomposed.png">
     <link rel="apple-touch-icon-precomposed" href="images/ico/apple-touch-icon-57-precomposed.png">
-
 </head><!--/head-->
 
 <body>
 	<%@include file="menu.jsp" %>
     <!--/#header-->
+
 
     <section id="page-breadcrumb">
         <div class="vertical-center sun">
@@ -35,8 +35,8 @@
                 <div class="row">
                     <div class="action">
                         <div class="col-sm-12">
-                            <h1 class="title">Book Loan Data</h1>
-                            <p>List of all Book Loan</p>
+                            <h1 class="title">Library Branch</h1>
+                            <p>List of all branches</p>
                         </div>
                     </div>
                 </div>
@@ -49,21 +49,13 @@
     	
         <div class="container">
             <div class="row">     
-                <div class="col-md-9 col-sm-8">                      
-					<table class="table table-hover">
-							<thead>
-								<tr>
-									<th style="text-align:center">Book Name</th>
-									<th style="text-align:center">Branch Name</th>
-									<th style="text-align:center">Borrower Name</th>						
-									<th style="text-align:center">Due Date</th>								
-									<th style="text-align:center">Change Due Date</th>
-								</tr>
-							</thead>
-							<tbody id="dataEntry">
-							</tbody>
-
-					</table>
+                <div class="col-md-9 col-sm-8">           
+                	<h4 align="center"><input type="text" placeholder="Enter text to search"
+										id="searchText" onkeyup="javascript:searchBranchesFromCurrntPage()" />
+					</h4>
+                    <div class="row" id=branchEntry>
+                         
+                    </div>
                     
                     <div class="portfolio-pagination">
                             <ul class="pagination" id ="pageData">
@@ -75,6 +67,9 @@
         </div>
     </section>
     <!--/#projects-->
+
+
+
 
     <script type="text/javascript" src="js/jquery.js"></script>
     <script type="text/javascript" src="js/bootstrap.min.js"></script>
@@ -92,42 +87,85 @@
         <h4 class="modal-title" id = modalTitle></h4>
       </div>
       <div class="modal-body">
-        <form name="editFrm" action="editBorrower" method="post">  
+        <form name="editFrm" action="editBranch" method="post">
         	<input type="hidden" name="updatedBranchId" id="updatedBranchId"/>
-        	<input type="hidden" name="updatedBookId" id="updatedBookId"/> 
-        	<input type="hidden" name="updatedCardNo" id="updatedCardNo"/>
-        	<h2>New Due Date</h2>
-        	<div class="bfh-datepicker" data-min="01/15/2013" data-close="false" id="datePicker">
-			</div>
-        	<input name="updatedDueDate" id="updatedDueDate"/>
+        	<h2>New branch name</h2>
+        	<input name="updatedBranchName" id="updatedBranchName"/>
+        	<h2>New branch address</h2>
+        	<input name="updatedBranchAddress" id="updatedBranchAddress"/>
         </form>
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-        <button type="button" class="btn btn-primary" onclick="submitEditPublisher();">Save changes</button>
+        <button type="button" class="btn btn-primary" onclick="submitEditBranch();">Save changes</button>
+      </div>
+    </div><!-- /.modal-content -->
+  </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+
+<div class="modal fade" id="manageModal">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title" id="modal-manage-title"></h4>
+      </div>
+      <div class="modal-body" >   
+      	<input type="hidden" name="editedBranchId" id="editedBranchId"/>
+         <table class="table table-hover">
+							<thead>
+								<tr>
+									<th style="text-align:center">Book Name</th>
+									<th style="text-align:center">Book Copies</th>
+									<th style="text-align:center">Save Change</th>									
+								</tr>
+							</thead>
+							<tbody id="bookCopiesTable">
+							</tbody>
+
+					</table>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>  
       </div>
     </div><!-- /.modal-content -->
   </div><!-- /.modal-dialog -->
 </div><!-- /.modal -->
 
 
-
-
 <script id="entry-template" type="text/x-handlebars-template">
-  <tr>
-    <td align="center">{{book.title}}</td>
-	<td align="center">{{branch.name}}</td>
-	<td align="center">{{borrower.name}}</td>
-	<td align="center">{{dueDate}}</td>
-
-	<td align="center"><button type="button" class="btn btn-primary" onclick="javascript:launchModal('{{book.bookId}}','{{branch.branchId}}','{{borrower.cardNo}}','{{dueDate}}','{{dateIn}}');">Change</button></td>
-  </tr>
+	<div class="col-xs-6 col-sm-6 col-md-4 portfolio-item branded mockup">
+     	<div class="portfolio-wrapper">
+        	<div class="portfolio-single">
+              	<div class="portfolio-thumb">
+                 	<img src="images/portfolio/6.jpg" class="img-responsive" alt="" id="imageIcon">
+             	</div>
+                <div class="portfolio-view">
+                 	<ul class="nav nav-pills">
+           				<li><a href="javascript:launchModal('{{branchId}}','{{name}}','{{address}}');"></i></a></li>
+						<li><a href="javascript:launchManageModal('{{branchId}}','{{name}}');"></i></a></li>    
+               		</ul>
+         		</div>
+      		</div>
+            <div class="portfolio-info ">
+            	<h2>{{name}}</h2>
+				<h2>{{address}}</h2>
+         	</div>
+     	</div>
+	</div>
 </script>
 
 <script id="pageNo-template" type="text/x-handlebars-template">
-	<li><a href="javascript:pageBookLoans({{pageNo}});">{{pageNo}}</a></li>
+	<li><a href="javascript:pageBranch({{pageNo}});">{{pageNo}}</a></li>
 </script>
 
+<script id="bookcopies-template" type="text/x-handlebars-template">
+  <tr>
+    <td align="center">{{book.title}}</td>
+	<td align="center"><input name="noOfCopiesModal" id="noOfCopiesModal" value={{noOfCopies}} onkeypress='return event.charCode >= 48 && event.charCode <= 57' /></td>
+	<button type="button" class="btn btn-primary" onclick="submitEditBookCopies();">Save changes</button>
+  </tr>
+</script>
 
 <script>
 	var source = $("#entry-template").html();
@@ -138,16 +176,21 @@
 	var dataString = "";
 	$.ajax({
 		method : "POST",
-		url : "listBookLoans"
+		url : "listBranches"
 	}).done(function(data) {
 		data = $.parseJSON(data);
 		$.each(data, function(i, item) {
 			var html = template(item);
 			dataString += html;
-		});	  
+		});
 		
-		$("#dataEntry").html(dataString);
-
+		  
+		$("#branchEntry").html(dataString);
+		
+		$(".portfolio-thumb img").each(function( index ) {
+			var number = Math.floor(Math.random() * 20) + 1;
+			this.src = "images/portfolio/"+number+".jpg";
+		});
 	});
 	
 	var pageSource = $("#pageNo-template").html();
@@ -155,7 +198,7 @@
 	var pageDataString = "";
 	$.ajax({
 		method : "POST",
-		url : "countBookLoans"
+		url : "countBranches"
 	}).done(function(data) {
 		var count = $.parseJSON(data);
 		var page = Math.ceil(count/10);
@@ -182,43 +225,61 @@
 </script>
 
 <script>
-	function launchModal(bookId, branchId, cardNo, dueDate, dateIn) {
-		$('#updatedBookId').val(bookId);
-		$('#updatedBranchId').val(branchId);
-		$('#updatedCardNo').val(cardNo);
-		$('#updatedDueDate').val(dueDate);
-		console.log($('#datePicker').data); 
-		$('#datePicker').data('min', '10/20/2015');
+	function launchModal(id, name, address) {
+		$('#modalTitle').html("Edit Branch"+" ("+name+")");
+		$('#updatedBranchId').val(id);
+		$('#updatedBranchName').val(name);
+		$('#updatedBranchAddress').val(address);
+		
 		$('#myModal').modal();
 	}
 	
+	function launchManageModal(id, name) {
+		$('#modal-manage-title').html(name+" Management");
+		$('#editedBranchId').val(id);
+		$('#manageModal').modal();
+		
+		//bookCopiesTable
+		var dataString = "";
+		var bookCopieSource = $("#bookcopies-template").html();
+		var bookCopiesTemplate = Handlebars.compile(bookCopieSource);
+		
+		$.ajax({
+			method : "POST",
+			url : "listBookCopiesForBranch",
+			data : {branchId:id}
+		}).done(function(data) {
+			data = $.parseJSON(data);
+			$.each(data, function(i, item) {
+				var html = bookCopiesTemplate(item);
+				dataString += html;
+			});
+			$("#bookCopiesTable").html(dataString);
+		});
+		
+	}
 	
-	function submitEditPublisher() {
+
+	function submitEditBookCopies() {
 		$('#myModal').modal('hide');
 		
-		console.log($('#datePicker').date);
+		var id = $('#editedBranchId').val();
 		
-		var bookId = $('#updatedBookId').val();
-		var branchId = $('#updatedBranchId').val();
-		var cardNo = $('#updatedCardNo').val();
-		var dueDate = $('#updatedDueDate').val();
-	/*
+
 		var dataString ="";
 		$.ajax({
 			method : "POST",
-			url : "editBookLoans",
+			url : "editBranch",
 			data : {
-						bookId:bookId,
-						branchId:branchId,
-						cardNo:cardNo,
-						dueDate:dueDate
+						branchId:id,
+						branchName:name,
+						branchAddress:address
 					}
 		}).done(function(data) {
 			pagination();
 		});
-		*/
 	}
-
+	
 	
 	var currentPage = 1;
 	var currentCount = 0;
@@ -230,7 +291,7 @@
 		var pageDataString = "";
 		$.ajax({
 			method : "POST",
-			url : "countBookLoans"
+			url : "countBranches"
 		}).done(function(data) {
 			var count = $.parseJSON(data);
 			currentCount = count;
@@ -245,25 +306,35 @@
 			}
 			
 			pageDataString += "<li><a href=\"javascript:previousPage();\">left</a></li>"
+			
 			$.each(jsonPage, function(i, item) {
 				var html = pageNoTemplate(item);
 				pageDataString += html;
 			});
-			pageDataString += "<li><a href=\"javascript:previousPage();\">right</a></li>"
-			$("#pageData").html(pageDataString)
 			
-			reloadBookLoansList();
+			pageDataString += "<li><a href=\"javascript:previousPage();\">right</a></li>"
+			
+			$("#pageData").html(pageDataString)
+			console.log(pageDataString);
+			reloadBranchList();
 		});
 	}
 	
-	function reloadBookLoansList() {
+	function reloadBranchList() {
+		if (currentPage > Math.ceil(currentCount/10)) {
+			currentPage--;
+		}
+		else if (currentPage < Math.ceil(currentCount/10)) {
+			currentPage = Math.ceil(currentCount/10);
+		}
+		
 		var source = $("#entry-template").html();
 		var template = Handlebars.compile(source);
-		
+
 		var dataString = "";
 		$.ajax({
 			method : "POST",
-			url : "listBookLoans",
+			url : "listBranchesWithPage",
 			data : {pageNo:currentPage}
 		}).done(function(data) {
 			data = $.parseJSON(data);
@@ -271,16 +342,21 @@
 				var html = template(item);
 				dataString += html;
 			});
-			$("#dataEntry").html(dataString);
+			$("#branchEntry").html(dataString);
+			
+			$(".portfolio-thumb img").each(function( index ) {
+				var number = Math.floor(Math.random() * 20) + 1;
+				this.src = "images/portfolio/"+number+".jpg";
+			});
 		});		
 	}
 	
-	function pageBookLoans(page) {
+	function pageBranch(page) {
 		currentPage = page;
 		dataString = "";
 		$.ajax({
 			  method: "POST",
-			  url: "listBookLoans",
+			  url: "listBranches",
 			  data: {pageNo: page}
 			}).done(function( data ) {
 				data = $.parseJSON(data);
@@ -288,8 +364,12 @@
 					var html = template(item);
 					dataString += html;
 				});
-				$("#dataEntry").html(dataString);
+				$("#branchEntry").html(dataString);
 				
+				$(".portfolio-thumb img").each(function( index ) {
+					var number = Math.floor(Math.random() * 20) + 1;
+					this.src = "images/portfolio/"+number+".jpg";
+				});
 			});
 		
 	}
@@ -297,49 +377,37 @@
 	function nextPage() {
 		if (currentPage < maxPage) {
 			currentPage++;
-			pageBookLoans(currentPage);
+			pageBranch(currentPage);
 		} 
 	}
 	
 	function previousPage() {
 		if (currentPage > 1) {
 			currentPage--;
-			pageBookLoans(currentPage);
+			pageBranch(currentPage);
 		} 
 	}
 	
 	
-
-
-	function editBook() {
-		var bookName = $('#editedBookName').val();
-		var pub = $("#availablePublishersEdit").val();
-
-		var authorsList = new Object();
-		$('#selectedAuthorsEdit').each(function(i, entry) {
-			var object = new Object();
-			authorsList = $(entry).val();
-		});
-
-		var genresList = new Object();
-		$('#selectedGenresEdit').each(function(i, entry) {
-			genresList = $(entry).val();
-		});
-
+	function searchBranchesFromCurrntPage() {
+		dataString = "";
 		$.ajax({
-			method : "POST",
-			url : "editBook",
-			data : {
-				bookName : bookName,
-				authors : authorsList,
-				publisher : pub,
-				genres : genresList
-			}
-		}).done(function(data) {
-			$('#addModal').modal('hide');
-			pagination();
-			alert('Success!');
-		});
-	}
+			  method: "POST",
+			  url: "searchBranchesWithIndex",
+			  data: {
+				  		searchText: $("#searchText").val(),
+						page: currentPage  
+			 		}
+			}).done(function( data ) {
+				data = $.parseJSON(data);
+				$.each(data, function(i, item) {
+					var html = template(item);
+					dataString += html;
+				});
+				$("#branchEntry").html(dataString);
+			});
+	} 
+	
+
 </script>
 </html>

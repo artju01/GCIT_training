@@ -56,6 +56,11 @@ public class Book_LoansDAO extends BaseDAO {
 		return readCount("select count(*) from tbl_book_loans");
 	}
 	
+	public int readUnreturnBookLoansCount() throws SQLException {
+		return readCount("select count(*) from tbl_book_loans where dateIn is null");
+	}
+	
+	
 	@SuppressWarnings("unchecked")
 	public BookLoans readOne(int bookId, int branchId, int cardNo) throws SQLException {
 		List<BookLoans> bookloans = (List<BookLoans>) read(
