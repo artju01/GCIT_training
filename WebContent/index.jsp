@@ -63,14 +63,14 @@
                             <ul role="menu" class="sub-menu">
                                 <li><a href="adminAuthor.jsp">Author</a></li>
                                 <li><a href="adminBook.jsp">Book</a></li>
-                                <li><a href="service.html">Branch</a></li>
-                                <li><a href="pricing.html">Borrower</a></li>       
-                                <li><a href="coming-soon.html">Coming Soon</a></li>
+                                <li><a href="adminBorrower.jsp">Branch</a></li>
+                                <li><a href="adminPublisher.jsp">Borrower</a></li>       
+                                <li><a href="adminBookLoan.jsp">Book Loan</a></li>
                             </ul>
                         </li>                    
                         <li class="dropdown"><a href="blog.html">Librarian <i class="fa fa-angle-down"></i></a>
                             <ul role="menu" class="sub-menu">
-                                <li><a href="blog.html">Branch</a></li>
+                                <li><a href="librarianBranch.jsp">Branch</a></li>
                                 <li><a href="blogtwo.html">Book</a></li>   
                             </ul>
                         </li>

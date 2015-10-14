@@ -39,7 +39,7 @@ public class LibrarianService {
 	
 	public void updateBookCopies(BookCopies copy) {
 		try {
-			bookCopiesDAO.insert(copy);
+			bookCopiesDAO.update(copy);
 		}
 		catch (SQLException e) {
 			System.out.println(e);

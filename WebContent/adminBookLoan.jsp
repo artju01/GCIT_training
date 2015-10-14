@@ -104,7 +104,7 @@
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-        <button type="button" class="btn btn-primary" onclick="submitEditPublisher();">Save changes</button>
+        <button type="button" class="btn btn-primary" onclick="submitEditBookLoan();">Save changes</button>
       </div>
     </div><!-- /.modal-content -->
   </div><!-- /.modal-dialog -->
@@ -186,23 +186,23 @@
 		$('#updatedBookId').val(bookId);
 		$('#updatedBranchId').val(branchId);
 		$('#updatedCardNo').val(cardNo);
-		$('#updatedDueDate').val(dueDate);
-		console.log($('#datePicker').data); 
+		$('#updatedDueDate').val(dueDate); 
 		$('#datePicker').data('min', '10/20/2015');
 		$('#myModal').modal();
 	}
 	
 	
-	function submitEditPublisher() {
+	function submitEditBookLoan() {
 		$('#myModal').modal('hide');
 		
-		console.log($('#datePicker').date);
+		console.log($('#datePicker').min);
 		
 		var bookId = $('#updatedBookId').val();
 		var branchId = $('#updatedBranchId').val();
 		var cardNo = $('#updatedCardNo').val();
 		var dueDate = $('#updatedDueDate').val();
-	/*
+		
+	
 		var dataString ="";
 		$.ajax({
 			method : "POST",
@@ -216,7 +216,7 @@
 		}).done(function(data) {
 			pagination();
 		});
-		*/
+		
 	}
 
 	

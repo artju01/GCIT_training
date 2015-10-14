@@ -163,7 +163,7 @@
   <tr>
     <td align="center">{{book.title}}</td>
 	<td align="center"><input name="noOfCopiesModal" id="noOfCopiesModal" value={{noOfCopies}} onkeypress='return event.charCode >= 48 && event.charCode <= 57' /></td>
-	<button type="button" class="btn btn-primary" onclick="submitEditBookCopies();">Save changes</button>
+	<td align="center"><button type="button" class="btn btn-primary" onclick="submitEditBookCopies({{book.bookId}});">Save changes</button></td>
   </tr>
 </script>
 
@@ -259,12 +259,29 @@
 		
 	}
 	
-
-	function submitEditBookCopies() {
+	function submitEditBookCopies(bookId) {
 		$('#myModal').modal('hide');
 		
 		var id = $('#editedBranchId').val();
+		var copies = $('#noOfCopiesModal').val()
 		
+
+		var dataString ="";
+		$.ajax({
+			method : "POST",
+			url : "editBookCopies",
+			data : {
+						bookId:bookId,
+						branchId:id,
+						noOfCopies:copies
+					}
+		}).done(function(data) {
+			alert("Success");
+		});
+	}
+
+	function submitEditBranch() {
+		var id = $('#updatedBranchId').val();
 
 		var dataString ="";
 		$.ajax({
@@ -315,7 +332,6 @@
 			pageDataString += "<li><a href=\"javascript:previousPage();\">right</a></li>"
 			
 			$("#pageData").html(pageDataString)
-			console.log(pageDataString);
 			reloadBranchList();
 		});
 	}

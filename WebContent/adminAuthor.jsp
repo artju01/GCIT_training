@@ -83,13 +83,15 @@ th{
 								<tr>
 									<td><input type="text" placeholder="Enter text to search"
 										id="searchText" onkeyup="javascript:searchAuthorsFromCurrntPage()" /></td>
+										
+									<td id="pageNo">
+									</td>
+							
 								</tr>
 							</thead>
-							<thead>
-								<tr id="pageNo">
-								</tr>
-							</thead>
+							
 						</table>
+						
 						<table class="table table-hover">
 							<thead>
 								<tr>
